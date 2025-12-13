@@ -232,6 +232,9 @@ async function initSesionPage() {
     // Inicializar juego
     await inicializarJuego(sessionNumber);
     
+    // Configurar botón de volver al inicio
+    configurarBotonVolverInicio();
+    
     // Inicializar efectos visuales
     efectosScroll();
 }
@@ -307,19 +310,11 @@ async function inicializarJuego(sessionNumber) {
     const sessionType = localStorage.getItem('sessionType');
     const esHost = sessionType === 'host';
     
-    // Mostrar botón de iniciar juego solo al host Y solo si NO hay juego activo
-    const botonIniciar = document.getElementById('boton-iniciar-juego');
-    if (botonIniciar && esHost && !hayJuegoActivo) {
-        botonIniciar.style.display = 'block';
-    } else if (botonIniciar) {
-        botonIniciar.style.display = 'none';
-    }
-    
-    // Mostrar botón "Nuevo Juego" solo al host Y solo si HAY juego activo
+    // Mostrar botón "Nuevo Juego" siempre al host (tanto si hay juego activo como si no)
     const botonNuevoJuego = document.getElementById('btn-nuevo-juego');
-    if (botonNuevoJuego && esHost && hayJuegoActivo) {
+    if (botonNuevoJuego && esHost) {
         botonNuevoJuego.style.display = 'block';
-        configurarBotonNuevoJuego();
+        configurarBotonNuevoJuego(hayJuegoActivo);
     } else if (botonNuevoJuego) {
         botonNuevoJuego.style.display = 'none';
     }
@@ -332,28 +327,78 @@ async function inicializarJuego(sessionNumber) {
 }
 
 // Configurar el botón de nuevo juego
-function configurarBotonNuevoJuego() {
+function configurarBotonNuevoJuego(hayJuegoActivo) {
     const botonNuevoJuego = document.getElementById('btn-nuevo-juego');
     const modal = document.getElementById('modal-confirmacion');
     const btnConfirmar = document.getElementById('btn-confirmar-nuevo-juego');
     const btnCancelar = document.getElementById('btn-cancelar-nuevo-juego');
     
-    if (!botonNuevoJuego || !modal) return;
+    if (!botonNuevoJuego) return;
     
     // Evitar agregar múltiples event listeners
     if (botonNuevoJuego.dataset.configured === 'true') return;
     botonNuevoJuego.dataset.configured = 'true';
     
-    // Mostrar modal al hacer clic en "Nuevo Juego"
-    botonNuevoJuego.onclick = function() {
+    // Si hay juego activo, mostrar modal de confirmación
+    // Si no hay juego activo, redirigir directamente
+    if (hayJuegoActivo && modal) {
+        // Mostrar modal al hacer clic en "Nuevo Juego"
+        botonNuevoJuego.onclick = function() {
+            modal.style.display = 'flex';
+        };
+        
+        // Confirmar: redirigir a seleccionar categoría
+        if (btnConfirmar) {
+            btnConfirmar.onclick = function() {
+                modal.style.display = 'none';
+                window.location.href = 'seleccionar-categoria.html';
+            };
+        }
+        
+        // Cancelar: cerrar modal
+        if (btnCancelar) {
+            btnCancelar.onclick = function() {
+                modal.style.display = 'none';
+            };
+        }
+        
+        // Cerrar modal al hacer clic fuera de él
+        modal.onclick = function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    } else {
+        // Si no hay juego activo, redirigir directamente
+        botonNuevoJuego.onclick = function() {
+            window.location.href = 'seleccionar-categoria.html';
+        };
+    }
+}
+
+// Configurar el botón de volver al inicio
+function configurarBotonVolverInicio() {
+    const botonVolverInicio = document.getElementById('btn-volver-inicio');
+    const modal = document.getElementById('modal-salir-sesion');
+    const btnConfirmar = document.getElementById('btn-confirmar-salir');
+    const btnCancelar = document.getElementById('btn-cancelar-salir');
+    
+    if (!botonVolverInicio || !modal) return;
+    
+    // Evitar agregar múltiples event listeners
+    if (botonVolverInicio.dataset.configured === 'true') return;
+    botonVolverInicio.dataset.configured = 'true';
+    
+    // Mostrar modal al hacer clic en "Volver al inicio"
+    botonVolverInicio.onclick = function() {
         modal.style.display = 'flex';
     };
     
-    // Confirmar: redirigir a seleccionar categoría
+    // Confirmar: redirigir al inicio
     if (btnConfirmar) {
         btnConfirmar.onclick = function() {
             modal.style.display = 'none';
-            window.location.href = 'seleccionar-categoria.html';
+            window.location.href = 'index.html';
         };
     }
     
@@ -524,7 +569,6 @@ async function cargarEstadoJuego(sessionNumber) {
 function mostrarResultadoJuego(estadoJuego, userName) {
     console.log('🎮 Mostrando resultado del juego:', estadoJuego);
     
-    const botonIniciar = document.getElementById('boton-iniciar-juego');
     const botonNuevoJuego = document.getElementById('btn-nuevo-juego');
     const resultado = document.getElementById('resultado-juego');
     
@@ -533,20 +577,14 @@ function mostrarResultadoJuego(estadoJuego, userName) {
         return;
     }
     
-    // Ocultar botón de iniciar juego
-    if (botonIniciar) {
-        botonIniciar.style.display = 'none';
-        console.log('✅ Botón de iniciar juego ocultado');
-    }
-    
     // Mostrar botón "Nuevo Juego" solo al host
     const sessionType = localStorage.getItem('sessionType');
     const esHost = sessionType === 'host';
     if (botonNuevoJuego && esHost) {
         botonNuevoJuego.style.display = 'block';
-        if (botonNuevoJuego.dataset.configured !== 'true') {
-            configurarBotonNuevoJuego();
-        }
+        // Reconfigurar el botón ya que ahora hay juego activo
+        botonNuevoJuego.dataset.configured = 'false';
+        configurarBotonNuevoJuego(true);
     } else if (botonNuevoJuego) {
         botonNuevoJuego.style.display = 'none';
     }
@@ -564,7 +602,7 @@ function mostrarResultadoJuego(estadoJuego, userName) {
     if (elementoImpostor) {
         // Crear botón para ver el concepto/palabra
         elementoImpostor.innerHTML = `
-            <div class="categoria-texto">${estadoJuego.categoria}</div>
+            <div class="categoria-texto">Categoría: ${estadoJuego.categoria}</div>
             <button id="btn-ver-concepto" class="btn-ver-concepto">Ver concepto o palabra</button>
             <div id="contenido-mostrado" class="contenido-mostrado" style="display: none;">
                 ${esImpostor ? '<div class="mensaje-impostor">Eres impostor</div>' : `<div class="elemento-mostrado">${estadoJuego.elemento}</div>`}
@@ -582,11 +620,11 @@ function mostrarResultadoJuego(estadoJuego, userName) {
                 btnVerConcepto.style.display = 'none';
                 contenidoMostrado.style.display = 'block';
                 
-                // Después de 3 segundos, volver a mostrar el botón
+                // Después de 2 segundos, volver a mostrar el botón
                 setTimeout(function() {
                     contenidoMostrado.style.display = 'none';
                     btnVerConcepto.style.display = 'block';
-                }, 3000);
+                }, 2000);
             });
         }
         
@@ -600,17 +638,54 @@ function mostrarResultadoJuego(estadoJuego, userName) {
                 btnRevelarIdentidad.textContent = 'Identidad revelada';
             }
             
-            btnRevelarIdentidad.addEventListener('click', async function() {
+            // Configurar modal de confirmación
+            const modalRevelar = document.getElementById('modal-revelar-identidad');
+            const btnConfirmarRevelar = document.getElementById('btn-confirmar-revelar');
+            const btnCancelarRevelar = document.getElementById('btn-cancelar-revelar');
+            
+            btnRevelarIdentidad.addEventListener('click', function() {
                 if (btnRevelarIdentidad.disabled) return;
                 
-                btnRevelarIdentidad.disabled = true;
-                btnRevelarIdentidad.textContent = 'Revelando...';
-                
-                const sessionNumber = localStorage.getItem('sessionNumber');
-                await revelarIdentidad(sessionNumber, userName, estadoJuego);
-                
-                btnRevelarIdentidad.textContent = 'Identidad revelada';
+                // Mostrar modal de confirmación
+                if (modalRevelar) {
+                    modalRevelar.style.display = 'flex';
+                }
             });
+            
+            // Confirmar: revelar identidad
+            if (btnConfirmarRevelar) {
+                btnConfirmarRevelar.onclick = async function() {
+                    if (modalRevelar) {
+                        modalRevelar.style.display = 'none';
+                    }
+                    
+                    btnRevelarIdentidad.disabled = true;
+                    btnRevelarIdentidad.textContent = 'Revelando...';
+                    
+                    const sessionNumber = localStorage.getItem('sessionNumber');
+                    await revelarIdentidad(sessionNumber, userName, estadoJuego);
+                    
+                    btnRevelarIdentidad.textContent = 'Identidad revelada';
+                };
+            }
+            
+            // Cancelar: cerrar modal
+            if (btnCancelarRevelar) {
+                btnCancelarRevelar.onclick = function() {
+                    if (modalRevelar) {
+                        modalRevelar.style.display = 'none';
+                    }
+                };
+            }
+            
+            // Cerrar modal al hacer clic fuera de él
+            if (modalRevelar) {
+                modalRevelar.onclick = function(e) {
+                    if (e.target === modalRevelar) {
+                        modalRevelar.style.display = 'none';
+                    }
+                };
+            }
         }
         
         if (esImpostor) {

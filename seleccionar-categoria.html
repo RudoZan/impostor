@@ -14,12 +14,15 @@
                 
                 <div class="sesion-info-display">
                     <div class="session-info-large">
-                        <div class="session-item">Sesión: <strong id="numero-sesion-header">---</strong></div>
+                        <div class="session-info-line">
+                            <span class="user-item" id="user-name-header" style="display: none;">Usuario: <strong id="nombre-usuario-header">---</strong></span>
+                            <span class="session-item">Sesión: <strong id="numero-sesion-header">---</strong></span>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="selector-categoria">
-                    <h3>Elige una categoría</h3>
+                    <h3>Elige una categoría para un nuevo juego</h3>
                     <div id="lista-categorias" class="lista-categorias"></div>
                 </div>
                 
@@ -58,6 +61,17 @@
             const numeroSesionHeader = document.getElementById('numero-sesion-header');
             if (numeroSesionHeader) {
                 numeroSesionHeader.textContent = sessionNumber;
+            }
+            
+            // Actualizar nombre de usuario
+            const userName = localStorage.getItem('userName');
+            if (userName) {
+                const userNameHeader = document.getElementById('user-name-header');
+                const nombreUsuarioHeader = document.getElementById('nombre-usuario-header');
+                if (userNameHeader && nombreUsuarioHeader) {
+                    nombreUsuarioHeader.textContent = userName;
+                    userNameHeader.style.display = 'block';
+                }
             }
             
             // Cargar categorías
