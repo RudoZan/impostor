@@ -12,6 +12,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Funciones globales para manejo de números de sesión
+// Función para generar número de sesión completo: YYYYMM + 4 dígitos aleatorios
+// Ejemplo: 2025123456 (año 2025, mes 12, código 3456)
+function generarNumeroSesion() {
+    const ahora = new Date();
+    const año = ahora.getFullYear(); // 2025
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0'); // 01-12
+    const codigoAleatorio = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000; // 1000-9999
+    
+    // Combinar: YYYYMM + código (ej: 2025123456)
+    return parseInt(`${año}${mes}${codigoAleatorio}`);
+}
+
+// Función para obtener el código corto (últimos 4 dígitos) de un número de sesión
+function obtenerCodigoCorto(numeroSesion) {
+    const numeroStr = String(numeroSesion);
+    // Retornar los últimos 4 dígitos
+    return numeroStr.slice(-4);
+}
+
+// Función para construir el número de sesión completo desde un código corto
+// Agrega automáticamente el año y mes actual
+function construirNumeroSesionCompleto(codigoCorto) {
+    const ahora = new Date();
+    const año = ahora.getFullYear();
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    
+    // Validar que el código corto tenga 4 dígitos
+    const codigo = String(codigoCorto).padStart(4, '0');
+    if (codigo.length !== 4) {
+        throw new Error('El código debe tener 4 dígitos');
+    }
+    
+    // Combinar: YYYYMM + código
+    return parseInt(`${año}${mes}${codigo}`);
+}
+
 // Funcionalidad para la página de inicio
 function initHomePage() {
     // Obtener el campo de nombre del usuario
@@ -104,11 +141,6 @@ function initHomePage() {
         return nombre;
     }
     
-    // Función para generar número de sesión aleatorio
-    function generarNumeroSesion() {
-        return Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
-    }
-    
     // Función para crear nueva sesión
     async function crearNuevaSesion() {
         const nombre = obtenerYValidarNombre();
@@ -116,7 +148,36 @@ function initHomePage() {
             return; // La validación ya mostró el error
         }
         
-        const numeroSesion = generarNumeroSesion();
+        // Verificar que Supabase esté disponible
+        if (typeof window.supabaseClient === 'undefined') {
+            alert('Error: No se puede conectar con la base de datos. Por favor, recarga la página.');
+            return;
+        }
+        
+        // Generar un número de sesión único
+        let numeroSesion;
+        let intentos = 0;
+        const maxIntentos = 50; // Límite de intentos para evitar loops infinitos
+        
+        do {
+            numeroSesion = generarNumeroSesion();
+            const existe = await verificarCodigoSesion(numeroSesion);
+            
+            if (!existe) {
+                // Número único encontrado
+                console.log(`✅ Número de sesión único encontrado: ${numeroSesion} (intento ${intentos + 1})`);
+                break;
+            }
+            
+            intentos++;
+            console.log(`⚠️ Número ${numeroSesion} ya existe, generando otro... (intento ${intentos})`);
+            
+            if (intentos >= maxIntentos) {
+                alert('Error: No se pudo generar un número de sesión único después de varios intentos. Por favor, intenta nuevamente.');
+                return;
+            }
+        } while (true);
+        
         // Guardar en localStorage para que esté disponible en la página de sesión
         localStorage.setItem('sessionNumber', numeroSesion);
         localStorage.setItem('sessionType', 'admin');
@@ -127,9 +188,13 @@ function initHomePage() {
                 role: 'admin',
                 usuario: nombre 
             });
+            console.log(`✅ Sesión ${numeroSesion} creada exitosamente`);
         } catch (err) {
             console.error('No se pudo guardar la sesión en Supabase:', err);
             alert('Error al crear la sesión. Por favor, intenta nuevamente.');
+            // Limpiar localStorage en caso de error
+            localStorage.removeItem('sessionNumber');
+            localStorage.removeItem('sessionType');
             return;
         }
 
@@ -144,27 +209,50 @@ function initHomePage() {
             return; // La validación ya mostró el error
         }
         
-        const numeroSesion = document.getElementById('numero-sesion').value;
+        const codigoIngresado = document.getElementById('numero-sesion').value;
         
-        if (!numeroSesion) {
-            alert('Por favor, ingresa un número de sesión.');
+        if (!codigoIngresado) {
+            alert('Por favor, ingresa el código de sesión (4 dígitos).');
             return;
         }
         
-        const num = parseInt(numeroSesion);
-        if (num < 1000 || num > 9999) {
-            alert('El número de sesión debe estar entre 1000 y 9999.');
+        // Validar que sea un número de 4 dígitos
+        const codigoNum = parseInt(codigoIngresado);
+        if (isNaN(codigoNum) || codigoIngresado.length !== 4 || codigoNum < 1000 || codigoNum > 9999) {
+            alert('El código de sesión debe ser un número de 4 dígitos (1000-9999).');
             return;
         }
         
-        // Verificar si el código existe en Supabase (OBLIGATORIO)
+        // Buscar sesión por código corto (últimos 4 dígitos)
+        // Primero intenta con el mes actual, luego busca en cualquier mes
         if (typeof window.supabaseClient === 'undefined') {
             alert('Error: No se puede conectar con la base de datos. Por favor, recarga la página.');
             return;
         }
         
-        const existe = await verificarCodigoSesion(numeroSesion);
-        if (!existe) {
+        let numeroSesion = null;
+        
+        // Primero intentar con el año y mes actual
+        try {
+            const numeroActual = construirNumeroSesionCompleto(codigoIngresado);
+            const existeActual = await verificarCodigoSesion(numeroActual);
+            if (existeActual) {
+                numeroSesion = numeroActual;
+                console.log(`✅ Sesión encontrada con mes actual: ${numeroSesion}`);
+            }
+        } catch (err) {
+            console.log('Error al construir número con mes actual:', err);
+        }
+        
+        // Si no se encontró, buscar en cualquier sesión que termine con esos 4 dígitos
+        if (!numeroSesion) {
+            numeroSesion = await buscarSesionPorCodigoCorto(codigoIngresado);
+            if (numeroSesion) {
+                console.log(`✅ Sesión encontrada en otro mes: ${numeroSesion}`);
+            }
+        }
+        
+        if (!numeroSesion) {
             alert('Este código de sesión no existe en la base de datos. Por favor, verifica el número e intenta nuevamente.');
             return;
         }
@@ -307,10 +395,11 @@ async function initSesionPage() {
         return;
     }
     
-    // Actualizar número de sesión
+    // Actualizar número de sesión (mostrar solo los últimos 4 dígitos)
     const numeroSesionHeader = document.getElementById('numero-sesion-header');
     if (numeroSesionHeader) {
-        numeroSesionHeader.textContent = sessionNumber;
+        const codigoCorto = obtenerCodigoCorto(sessionNumber);
+        numeroSesionHeader.textContent = codigoCorto;
     }
     
     // Función para actualizar la información del usuario
@@ -1087,9 +1176,10 @@ function actualizarEstadoJuegoSegunUsuarios(numeroUsuarios) {
     const mensajeEsperando = document.getElementById('mensaje-esperando');
     const numeroSesionEsperando = document.getElementById('numero-sesion-esperando');
     
-    // Actualizar número de sesión en el mensaje
+    // Actualizar número de sesión en el mensaje (mostrar solo los últimos 4 dígitos)
     if (numeroSesionEsperando && sessionNumber) {
-        numeroSesionEsperando.textContent = sessionNumber;
+        const codigoCorto = obtenerCodigoCorto(sessionNumber);
+        numeroSesionEsperando.textContent = codigoCorto;
     }
     
     // Si hay menos de 3 usuarios, mostrar mensaje de espera
@@ -1567,6 +1657,47 @@ async function verificarCodigoSesion(codigo) {
         console.error('Error verificando código:', err);
         console.error('Stack trace:', err.stack);
         return false;
+    }
+}
+
+// Buscar sesión por código corto (últimos 4 dígitos) en cualquier mes/año
+async function buscarSesionPorCodigoCorto(codigoCorto) {
+    if (typeof window.supabaseClient === 'undefined') {
+        console.warn('Supabase no inicializado, no se puede buscar la sesión.');
+        return null;
+    }
+
+    try {
+        // Obtener todos los códigos de sesión que terminen con los 4 dígitos
+        const { data, error } = await window.supabaseClient
+            .from('codigos')
+            .select('codigo')
+            .eq('app', 'Impostor1')
+            .limit(1000); // Limitar para no sobrecargar
+
+        if (error) {
+            console.error('Error buscando sesión por código corto:', error);
+            return null;
+        }
+
+        if (!data || data.length === 0) {
+            return null;
+        }
+
+        // Buscar el código que termine con los 4 dígitos
+        const codigoStr = String(codigoCorto).padStart(4, '0');
+        for (const registro of data) {
+            const codigoCompleto = String(registro.codigo);
+            if (codigoCompleto.endsWith(codigoStr)) {
+                console.log(`🔍 Sesión encontrada: ${codigoCompleto} termina con ${codigoStr}`);
+                return parseInt(codigoCompleto);
+            }
+        }
+
+        return null;
+    } catch (err) {
+        console.error('Error buscando sesión por código corto:', err);
+        return null;
     }
 }
 
