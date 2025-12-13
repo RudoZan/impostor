@@ -963,8 +963,7 @@ function mostrarUsuarios(usuarios, estadoJuego = null) {
         return `
             <div class="usuario-item">
                 <span class="nombre-usuario">${usuario.usuario}</span>
-                ${badge}
-                ${identidadBadge}
+                <div class="badges-container">${badge} ${identidadBadge}</div>
             </div>
         `;
     }).join('');

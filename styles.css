@@ -157,6 +157,15 @@ main {
     letter-spacing: -0.5px;
 }
 
+.hero h2 .version {
+    font-size: 0.4em;
+    font-weight: 400;
+    color: #a0aec0;
+    -webkit-text-fill-color: #a0aec0;
+    vertical-align: super;
+    margin-left: 0.3em;
+}
+
 .hero p {
     font-size: 1.2rem;
     margin-bottom: 1rem;
@@ -411,16 +420,21 @@ main {
 footer {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    color: #4a5568;
+    color: #718096;
     text-align: center;
-    padding: 1.2rem;
+    padding: 0.75rem;
     margin-top: auto;
     position: sticky;
     bottom: 0;
     width: 100%;
-    border-top: 2px solid #e2e8f0;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-    font-weight: 500;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    font-weight: 400;
+    font-size: 0.85rem;
+}
+
+footer p {
+    margin: 0;
 }
 
 /* Estilos para página de sesión */
@@ -472,78 +486,108 @@ footer {
 
 .usuarios-sesion {
     margin: 1rem 0;
-    padding: 1rem;
+    padding: 0.75rem;
     background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-    border-radius: 16px;
+    border-radius: 12px;
     border: 2px dashed #cbd5e0;
 }
 
 .usuarios-sesion h3 {
     color: #4a5568;
     margin-bottom: 0.5rem;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     text-align: center;
 }
 
 .lista-usuarios {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.usuario-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0.75rem;
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
     background: white;
-    border-radius: 12px;
-    border: 2px solid #e2e8f0;
-    transition: all 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.usuario-item:hover {
-    border-color: #ff6b6b;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.1);
+.lista-usuarios .usuario-item {
+    display: table-row;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s ease;
+}
+
+.lista-usuarios .usuario-item:last-child {
+    border-bottom: none;
+}
+
+.lista-usuarios .usuario-item:hover {
+    background-color: #f7fafc;
+}
+
+.lista-usuarios .usuario-item > * {
+    display: table-cell;
+    padding: 0.4rem 0.6rem;
+    vertical-align: middle;
+}
+
+.lista-usuarios .nombre-usuario {
+    width: auto;
+    text-align: left;
+}
+
+.lista-usuarios .badges-container {
+    width: 1%;
+    white-space: nowrap;
 }
 
 .nombre-usuario {
     color: #2d3748;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.badges-container {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.badges-container > * {
+    margin-left: 0.4rem;
 }
 
 .badge-host {
     background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
     color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
+    display: inline-block;
     letter-spacing: 0.5px;
 }
 
 .badge-impostor {
+    display: inline-block;
     background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
     color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-left: 0.5rem;
 }
 
 .badge-no-impostor {
+    display: inline-block;
     background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
     color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
