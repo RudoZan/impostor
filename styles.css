@@ -861,16 +861,16 @@ footer p {
 .modal-buttons {
     display: flex;
     gap: 1rem;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .btn-confirmar {
     background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -885,9 +885,9 @@ footer p {
     background: #e2e8f0;
     color: #4a5568;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -959,6 +959,7 @@ footer p {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    position: relative;
 }
 
 .btn-categoria:hover {
@@ -966,8 +967,16 @@ footer p {
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
 }
 
-.btn-categoria:active {
-    transform: translateY(0);
+.btn-categoria:active,
+.btn-categoria.selected {
+    transform: translateY(2px) scale(0.95);
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.4), 
+                0 0 20px rgba(255, 107, 107, 0.6),
+                0 2px 8px rgba(255, 107, 107, 0.3);
+    transition: all 0.1s ease;
+    border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
 .resultado-juego {
@@ -1301,16 +1310,46 @@ footer p {
     
     .btn-primary,
     .btn-secondary {
-        padding: 0.75rem 1.5rem;
-        font-size: 0.95rem;
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
         width: 100%;
         max-width: 100%;
     }
     
     .btn-large {
-        padding: 0.85rem 1.5rem;
-        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
         max-width: 100%;
+    }
+    
+    .btn-categoria {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+        border-radius: 10px;
+    }
+    
+    .btn-ver-concepto {
+        padding: 0.9rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 12px;
+    }
+    
+    .btn-revelar-identidad {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+        border-radius: 10px;
+        max-width: 100%;
+    }
+    
+    .btn-instrucciones {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .btn-nuevo-juego,
+    .btn-back {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
     }
     
     .sesion-actions {

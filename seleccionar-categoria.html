@@ -98,6 +98,8 @@
                 botonCategoria.className = 'btn-categoria';
                 botonCategoria.textContent = categoria;
                 botonCategoria.addEventListener('click', function() {
+                    // Agregar clase selected para mantener el color naranja
+                    botonCategoria.classList.add('selected');
                     iniciarJuegoConCategoria(categoria);
                 });
                 listaCategorias.appendChild(botonCategoria);

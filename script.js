@@ -843,7 +843,7 @@ async function mostrarResultadoJuego(estadoJuego, userName) {
             <div id="contenido-mostrado" class="contenido-mostrado" style="display: none;">
                 ${esImpostor ? '<div class="mensaje-impostor">Eres impostor</div>' : `<div class="elemento-mostrado">${estadoJuego.elemento}</div>`}
             </div>
-            <button id="btn-revelar-identidad" class="btn-revelar-identidad">Revelar identidad</button>
+            <button id="btn-revelar-identidad" class="btn-revelar-identidad">Revelar mi identidad</button>
         `;
         
         // Configurar evento del botón ver concepto
