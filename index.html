@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web de Prueba - Gestión de Sesiones</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <section class="hero">
+            <div class="welcome-container">
+                <h2>IMPOSTOR</h2>
+                
+                <div class="user-name-setup">
+                    <div class="input-group">
+                        <label for="nombre-usuario-inicio">Usuario:</label>
+                        <input 
+                            type="text" 
+                            id="nombre-usuario-inicio" 
+                            placeholder="Ingresa tu nombre"
+                            maxlength="50"
+                            required
+                        >
+                    </div>
+                </div>
+                
+                <div class="sesion-actions">
+                    <button id="btn-crear-sesion" class="btn-primary btn-large">
+                        Crear Nueva Sesión
+                    </button>
+                    
+                    <div class="join-sesion">
+                        <h3>O únete a una sesión existente</h3>
+                        <div class="input-group">
+                            <input 
+                                type="number" 
+                                id="numero-sesion" 
+                                placeholder="4 dígitos"
+                                min="1000"
+                                max="9999"
+                                maxlength="4"
+                            >
+                            <button id="btn-abrir-sesion" class="btn-secondary">
+                                Abrir Sesión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <!-- Supabase SDK for database integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-init.js"></script>
+</body>
+</html>

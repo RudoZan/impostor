@@ -1,0 +1,33 @@
+{
+  "name": "web-prueba",
+  "version": "1.0.0",
+  "description": "Una página web de prueba con HTML, CSS y JavaScript",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 3000 -o",
+    "dev": "npx live-server --port=3000 --open=/index.html",
+    "build": "echo 'No build process needed for static site'",
+    "serve": "npx serve -s . -l 3000"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "javascript",
+    "web",
+    "prueba",
+    "demo"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2",
+    "serve": "^14.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/web-prueba.git"
+  },
+  "homepage": "https://tu-usuario.github.io/web-prueba"
+}
+

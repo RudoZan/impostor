@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesión - Web de Prueba</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <section class="hero">
+            <div class="welcome-container">
+                <h2>IMPOSTOR</h2>
+                
+                <div class="sesion-info-display">
+                    <div class="session-info-large">
+                        <div class="user-item" id="user-name-header" style="display: none;">Usuario: <strong id="nombre-usuario-header">---</strong></div>
+                        <div class="session-item">Sesión: <strong id="numero-sesion-header">---</strong></div>
+                    </div>
+                </div>
+                
+                <div class="usuarios-sesion">
+                    <h3>Usuarios en la sesión</h3>
+                    <div id="lista-usuarios" class="lista-usuarios">
+                        <p class="cargando">Cargando usuarios...</p>
+                    </div>
+                </div>
+                
+                <div id="juego-section" class="juego-section" style="display: none;">
+                    <div id="boton-iniciar-juego" class="boton-iniciar-juego" style="display: none;">
+                        <a href="seleccionar-categoria.html" class="btn-primary btn-large" style="text-decoration: none; display: inline-block;">
+                            🎮 Iniciar Juego
+                        </a>
+                    </div>
+                    
+                    <div id="resultado-juego" class="resultado-juego" style="display: none;">
+                        <div class="resultado-contenido">
+                            <div id="elemento-o-impostor" class="elemento-impostor"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sesion-actions-bottom">
+                    <a href="index.html" class="btn-back">← Volver al inicio</a>
+                    <button id="btn-nuevo-juego" class="btn-nuevo-juego" style="display: none;">
+                        🎮 Nuevo Juego
+                    </button>
+                </div>
+                
+                <!-- Modal de confirmación -->
+                <div id="modal-confirmacion" class="modal-overlay" style="display: none;">
+                    <div class="modal-content">
+                        <h3>¿Reiniciar el juego?</h3>
+                        <p>Se iniciará un nuevo juego en esta sesión. Todos los usuarios verán el nuevo elemento e impostor.</p>
+                        <div class="modal-buttons">
+                            <button id="btn-confirmar-nuevo-juego" class="btn-confirmar">Confirmar</button>
+                            <button id="btn-cancelar-nuevo-juego" class="btn-cancelar">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <!-- Supabase SDK for database integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-init.js"></script>
+</body>
+</html>

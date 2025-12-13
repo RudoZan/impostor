@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Categoría - El Impostor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <section class="hero">
+            <div class="welcome-container">
+                <h2>IMPOSTOR</h2>
+                
+                <div class="sesion-info-display">
+                    <div class="session-info-large">
+                        <div class="session-item">Sesión: <strong id="numero-sesion-header">---</strong></div>
+                    </div>
+                </div>
+                
+                <div class="selector-categoria">
+                    <h3>Elige una categoría</h3>
+                    <div id="lista-categorias" class="lista-categorias"></div>
+                </div>
+                
+                <div class="sesion-actions-bottom">
+                    <a href="sesion.html" class="btn-back">← Volver a la sesión</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <!-- Supabase SDK for database integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-init.js"></script>
+    <script>
+        // Inicializar página de selección de categoría
+        async function initSeleccionarCategoria() {
+            const sessionNumber = localStorage.getItem('sessionNumber');
+            
+            // Si no hay datos de sesión, redirigir al inicio
+            if (!sessionNumber) {
+                alert('No se encontró información de sesión. Redirigiendo al inicio...');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Verificar que el usuario es host
+            const sessionType = localStorage.getItem('sessionType');
+            if (sessionType !== 'host') {
+                alert('Solo el host puede iniciar el juego. Redirigiendo...');
+                window.location.href = 'sesion.html';
+                return;
+            }
+            
+            // Actualizar número de sesión
+            const numeroSesionHeader = document.getElementById('numero-sesion-header');
+            if (numeroSesionHeader) {
+                numeroSesionHeader.textContent = sessionNumber;
+            }
+            
+            // Cargar categorías
+            cargarCategorias();
+            
+            // Mostrar lista de categorías
+            mostrarSelectorCategorias();
+        }
+        
+        // Mostrar selector de categorías
+        function mostrarSelectorCategorias() {
+            if (!categoriasData) {
+                alert('Error: No se pudieron cargar las categorías');
+                return;
+            }
+            
+            const listaCategorias = document.getElementById('lista-categorias');
+            if (!listaCategorias) return;
+            
+            listaCategorias.innerHTML = '';
+            
+            Object.keys(categoriasData).forEach(categoria => {
+                const botonCategoria = document.createElement('button');
+                botonCategoria.className = 'btn-categoria';
+                botonCategoria.textContent = categoria;
+                botonCategoria.addEventListener('click', function() {
+                    iniciarJuegoConCategoria(categoria);
+                });
+                listaCategorias.appendChild(botonCategoria);
+            });
+        }
+        
+        // Iniciar juego con una categoría seleccionada
+        async function iniciarJuegoConCategoria(categoria) {
+            const sessionNumber = localStorage.getItem('sessionNumber');
+            const userName = localStorage.getItem('userName');
+            
+            if (!sessionNumber || !userName) {
+                alert('Error: No se encontró información de sesión o usuario');
+                return;
+            }
+            
+            // Obtener lista de usuarios de la sesión
+            const usuarios = await obtenerUsuariosSesion(sessionNumber);
+            
+            if (usuarios.length < 2) {
+                alert('Se necesitan al menos 2 usuarios para jugar');
+                return;
+            }
+            
+            // Elegir elemento aleatorio de la categoría
+            const elementos = categoriasData[categoria];
+            const elementoElegido = elementos[Math.floor(Math.random() * elementos.length)];
+            
+            // Elegir impostor aleatorio
+            const impostorIndex = Math.floor(Math.random() * usuarios.length);
+            const impostor = usuarios[impostorIndex];
+            
+            // Crear estado del juego
+            const estadoJuego = {
+                categoria: categoria,
+                elemento: elementoElegido,
+                impostor: impostor.usuario,
+                activo: true,
+                iniciadoPor: userName,
+                iniciadoEn: new Date().toISOString()
+            };
+            
+            // Guardar estado del juego en Supabase
+            console.log('💾 Guardando juego en Supabase...');
+            console.log('📋 Estado del juego a guardar:', estadoJuego);
+            
+            await guardarEstadoJuego(sessionNumber, estadoJuego);
+            console.log('✅ Juego guardado, esperando confirmación...');
+            
+            // Esperar un momento para asegurar que Supabase procese el cambio
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Verificar que se guardó correctamente antes de redirigir
+            console.log('🔍 Verificando que el juego se guardó correctamente...');
+            
+            // Redirigir de vuelta a la sesión
+            console.log('➡️ Redirigiendo a sesion.html...');
+            window.location.href = 'sesion.html';
+        }
+        
+        // Inicializar cuando se carga la página
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSeleccionarCategoria);
+        } else {
+            initSeleccionarCategoria();
+        }
+    </script>
+</body>
+</html>
+
