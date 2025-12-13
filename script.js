@@ -345,37 +345,33 @@ async function initSesionPage() {
 
 // Variables globales del juego
 let categoriasData = {
-  "Animales": [
-    "Felinos", "Pájaros", "Animal que vuela", "Animal que vive en el agua", "Animal que es doméstico",
-    "Animal que es salvaje", "Animal que es grande", "Animal que es pequeño", "Animal que corre rápido", "Animal que nada"
+"Animales": [
+  "León", "Águila", "Delfín", "Canguro", "Tiburón",
+  "Gato", "Perro", "Elefante", "Serpiente", "Murciélago"
+],
+"Lugares": [
+  "Playa", "Montaña", "Escuela", "Hospital", "Museo", 
+  "Cine", "Parque", "Casa", "Restaurante", "Aeropuerto", "Estacionamiento"
+],
+"Objetos": [
+  "Hielo", "Cuerda", "Pantalla", "Llave", "Sombrero", 
+  "Libro", "Teléfono", "Silla", "Reloj", "Pelota", 
+],
+"Comida": [
+    "Lleva carne", "Se come fría", "Comida salada", "Lleva pasta",
+    "Se cocina al horno", "Sirve de postre", "Hecha con Harina", "Se puede comer con la mano"
   ],
-  "Países": [
-    "País de Europa", "País de América", "País de Asia", "País de África", "País de Oceanía",
-    "País que habla español", "País que habla inglés", "País con playa", "País con montañas", "País grande"
-  ],
-  "Deportes": [
-    "Deporte con pelota", "Deporte acuático", "Deporte de invierno", "Deporte individual", "Deporte en equipo",
-    "Deporte olímpico", "Deporte que se juega al aire libre", "Deporte de contacto", "Deporte con raqueta", "Deporte de velocidad"
-  ],
-  "Electrodomésticos": [
+"Electrodomésticos": [
     "Refrigerador", "Lavadora", "Secadora", "Microondas", "Horno", "Licuadora", "Batidora", "Cafetera", "Tostadora", "Aspiradora",
     "Plancha", "Ventilador", "Aire acondicionado", "Calefactor", "Televisor", "Radio", "Reproductor de DVD", "Lavavajillas", "Horno eléctrico" 
   ],
+"Deportes": [
+    "Deporte con pelota", "Deporte acuático", "Deporte de invierno", "Deporte individual", "Deporte en equipo",
+    "Deporte olímpico", "Deporte que se juega al aire libre", "Deporte de contacto", "Deporte con raqueta", "Deporte de velocidad"
+  ],
   "Profesiones": [
-    "Profesión en educación", "Profesión en tecnología", "Profesión en salud", "Profesión en construcción", "Profesión creativa",
+    "Profesión en educación", "Profesión en tecnología", "Profesión en salud", "Profesión en construcción de edificios", "Profesión creativa",
     "Profesión que trabaja con números", "Profesión que trabaja con personas", "Profesión que requiere estudios universitarios", "Profesión de servicio", "Profesión artística"
-  ],
-  "Conceptos de Matemática": [
-    "Número par", "Número impar", "Número primo", "Operación matemática", "Figura geométrica",
-    "Unidad de medida", "Concepto de álgebra", "Concepto de geometría", "Fracción", "Porcentaje"
-  ],
-    "Películas": [
-    "Película de acción", "Película de comedia", "Película de ciencia ficción", "Película animada", "Película de terror",
-    "Película de superhéroes", "Película de Disney", "Película de aventuras", "Película dramática", "Película de fantasía"
-  ],
-  "Lugares": [
-    "Lugar para estudiar", "Lugar para comer", "Lugar para comprar", "Lugar para trabajar", "Lugar para descansar",
-    "Lugar público", "Lugar privado", "Lugar al aire libre", "Lugar techado", "Lugar de entretenimiento"
   ]
 };
 
