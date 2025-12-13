@@ -22,6 +22,152 @@
                             maxlength="50"
                             required
                         >
+                        <button type="button" id="btn-cambiar-icono" class="btn-cambiar-icono" title="Cambiar ícono">
+                            <span id="icono-actual">👤</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Modal de Selección de Ícono -->
+                <div id="modal-icono" class="modal-overlay" style="display: none;">
+                    <div class="modal-content modal-icono">
+                        <h3>Elige tu ícono</h3>
+                        <div class="iconos-grid" id="iconos-grid">
+                            <!-- Personas -->
+                            <button type="button" class="icono-option" data-icono="👤">👤</button>
+                            <button type="button" class="icono-option" data-icono="👨">👨</button>
+                            <button type="button" class="icono-option" data-icono="👩">👩</button>
+                            <button type="button" class="icono-option" data-icono="🧑">🧑</button>
+                            <button type="button" class="icono-option" data-icono="👦">👦</button>
+                            <button type="button" class="icono-option" data-icono="👧">👧</button>
+                            <button type="button" class="icono-option" data-icono="🧒">🧒</button>
+                            <button type="button" class="icono-option" data-icono="👴">👴</button>
+                            <button type="button" class="icono-option" data-icono="👵">👵</button>
+                            <button type="button" class="icono-option" data-icono="🤴">🤴</button>
+                            <button type="button" class="icono-option" data-icono="👸">👸</button>
+                            <button type="button" class="icono-option" data-icono="🦸">🦸</button>
+                            <button type="button" class="icono-option" data-icono="🦹">🦹</button>
+                            <button type="button" class="icono-option" data-icono="🧙">🧙</button>
+                            <button type="button" class="icono-option" data-icono="🧚">🧚</button>
+                            <button type="button" class="icono-option" data-icono="🧛">🧛</button>
+                            <button type="button" class="icono-option" data-icono="🧜">🧜</button>
+                            <button type="button" class="icono-option" data-icono="🧝">🧝</button>
+                            <button type="button" class="icono-option" data-icono="🧞">🧞</button>
+                            <button type="button" class="icono-option" data-icono="🧟">🧟</button>
+                            <button type="button" class="icono-option" data-icono="🤡">🤡</button>
+                            <button type="button" class="icono-option" data-icono="🎭">🎭</button>
+                            <button type="button" class="icono-option" data-icono="🕵️">🕵️</button>
+                            <button type="button" class="icono-option" data-icono="👮">👮</button>
+                            <button type="button" class="icono-option" data-icono="👷">👷</button>
+                            <button type="button" class="icono-option" data-icono="💂">💂</button>
+                            <button type="button" class="icono-option" data-icono="🥷">🥷</button>
+                            <button type="button" class="icono-option" data-icono="🧑‍🚀">🧑‍🚀</button>
+                            <button type="button" class="icono-option" data-icono="🧑‍🎤">🧑‍🎤</button>
+                            <button type="button" class="icono-option" data-icono="🧑‍🎨">🧑‍🎨</button>
+                            
+                            <!-- Robots y Tecnología -->
+                            <button type="button" class="icono-option" data-icono="🤖">🤖</button>
+                            <button type="button" class="icono-option" data-icono="👽">👽</button>
+                            <button type="button" class="icono-option" data-icono="👾">👾</button>
+                            <button type="button" class="icono-option" data-icono="🛸">🛸</button>
+                            <button type="button" class="icono-option" data-icono="🦾">🦾</button>
+                            <button type="button" class="icono-option" data-icono="🦿">🦿</button>
+                            
+                            <!-- Animales - Grandes -->
+                            <button type="button" class="icono-option" data-icono="🦁">🦁</button>
+                            <button type="button" class="icono-option" data-icono="🐯">🐯</button>
+                            <button type="button" class="icono-option" data-icono="🐻">🐻</button>
+                            <button type="button" class="icono-option" data-icono="🐨">🐨</button>
+                            <button type="button" class="icono-option" data-icono="🐺">🐺</button>
+                            <button type="button" class="icono-option" data-icono="🦊">🦊</button>
+                            <button type="button" class="icono-option" data-icono="🐼">🐼</button>
+                            <button type="button" class="icono-option" data-icono="🐨">🐨</button>
+                            <button type="button" class="icono-option" data-icono="🦄">🦄</button>
+                            <button type="button" class="icono-option" data-icono="🐉">🐉</button>
+                            <button type="button" class="icono-option" data-icono="🦖">🦖</button>
+                            <button type="button" class="icono-option" data-icono="🦕">🦕</button>
+                            
+                            <!-- Animales - Medianos -->
+                            <button type="button" class="icono-option" data-icono="🐰">🐰</button>
+                            <button type="button" class="icono-option" data-icono="🐸">🐸</button>
+                            <button type="button" class="icono-option" data-icono="🐷">🐷</button>
+                            <button type="button" class="icono-option" data-icono="🐶">🐶</button>
+                            <button type="button" class="icono-option" data-icono="🐱">🐱</button>
+                            <button type="button" class="icono-option" data-icono="🐭">🐭</button>
+                            <button type="button" class="icono-option" data-icono="🐹">🐹</button>
+                            <button type="button" class="icono-option" data-icono="🐻">🐻</button>
+                            <button type="button" class="icono-option" data-icono="🐨">🐨</button>
+                            <button type="button" class="icono-option" data-icono="🐼">🐼</button>
+                            <button type="button" class="icono-option" data-icono="🦝">🦝</button>
+                            <button type="button" class="icono-option" data-icono="🦡">🦡</button>
+                            <button type="button" class="icono-option" data-icono="🐨">🐨</button>
+                            
+                            <!-- Animales - Otros -->
+                            <button type="button" class="icono-option" data-icono="🐴">🐴</button>
+                            <button type="button" class="icono-option" data-icono="🦓">🦓</button>
+                            <button type="button" class="icono-option" data-icono="🦒">🦒</button>
+                            <button type="button" class="icono-option" data-icono="🦘">🦘</button>
+                            <button type="button" class="icono-option" data-icono="🐘">🐘</button>
+                            <button type="button" class="icono-option" data-icono="🦏">🦏</button>
+                            <button type="button" class="icono-option" data-icono="🐪">🐪</button>
+                            <button type="button" class="icono-option" data-icono="🐫">🐫</button>
+                            <button type="button" class="icono-option" data-icono="🦙">🦙</button>
+                            <button type="button" class="icono-option" data-icono="🦛">🦛</button>
+                            
+                            <!-- Aves -->
+                            <button type="button" class="icono-option" data-icono="🐦">🐦</button>
+                            <button type="button" class="icono-option" data-icono="🐧">🐧</button>
+                            <button type="button" class="icono-option" data-icono="🦅">🦅</button>
+                            <button type="button" class="icono-option" data-icono="🦆">🦆</button>
+                            <button type="button" class="icono-option" data-icono="🦢">🦢</button>
+                            <button type="button" class="icono-option" data-icono="🦉">🦉</button>
+                            <button type="button" class="icono-option" data-icono="🦚">🦚</button>
+                            <button type="button" class="icono-option" data-icono="🦜">🦜</button>
+                            <button type="button" class="icono-option" data-icono="🐓">🐓</button>
+                            <button type="button" class="icono-option" data-icono="🦩">🦩</button>
+                            
+                            <!-- Marinos -->
+                            <button type="button" class="icono-option" data-icono="🐟">🐟</button>
+                            <button type="button" class="icono-option" data-icono="🐠">🐠</button>
+                            <button type="button" class="icono-option" data-icono="🐡">🐡</button>
+                            <button type="button" class="icono-option" data-icono="🦈">🦈</button>
+                            <button type="button" class="icono-option" data-icono="🐙">🐙</button>
+                            <button type="button" class="icono-option" data-icono="🐚">🐚</button>
+                            <button type="button" class="icono-option" data-icono="🦀">🦀</button>
+                            <button type="button" class="icono-option" data-icono="🦞">🦞</button>
+                            <button type="button" class="icono-option" data-icono="🦐">🦐</button>
+                            <button type="button" class="icono-option" data-icono="🦑">🦑</button>
+                            <button type="button" class="icono-option" data-icono="🐳">🐳</button>
+                            <button type="button" class="icono-option" data-icono="🐋">🐋</button>
+                            <button type="button" class="icono-option" data-icono="🐬">🐬</button>
+                            
+                            <!-- Insectos y Pequeños -->
+                            <button type="button" class="icono-option" data-icono="🐛">🐛</button>
+                            <button type="button" class="icono-option" data-icono="🦋">🦋</button>
+                            <button type="button" class="icono-option" data-icono="🐝">🐝</button>
+                            <button type="button" class="icono-option" data-icono="🐞">🐞</button>
+                            <button type="button" class="icono-option" data-icono="🦗">🦗</button>
+                            <button type="button" class="icono-option" data-icono="🕷️">🕷️</button>
+                            <button type="button" class="icono-option" data-icono="🦂">🦂</button>
+                            <button type="button" class="icono-option" data-icono="🦟">🦟</button>
+                            <button type="button" class="icono-option" data-icono="🦠">🦠</button>
+                            
+                            <!-- Objetos y Símbolos -->
+                            <button type="button" class="icono-option" data-icono="🎃">🎃</button>
+                            <button type="button" class="icono-option" data-icono="🎭">🎭</button>
+                            <button type="button" class="icono-option" data-icono="🎪">🎪</button>
+                            <button type="button" class="icono-option" data-icono="🎨">🎨</button>
+                            <button type="button" class="icono-option" data-icono="🎯">🎯</button>
+                            <button type="button" class="icono-option" data-icono="🎲">🎲</button>
+                            <button type="button" class="icono-option" data-icono="🃏">🃏</button>
+                            <button type="button" class="icono-option" data-icono="🀄">🀄</button>
+                            <button type="button" class="icono-option" data-icono="🎴">🎴</button>
+                            <button type="button" class="icono-option" data-icono="🎮">🎮</button>
+                            <button type="button" class="icono-option" data-icono="🕹️">🕹️</button>
+                        </div>
+                        <div class="modal-buttons">
+                            <button id="btn-cerrar-icono" class="btn-confirmar">Listo</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -44,6 +190,39 @@
                                 max="9999"
                                 maxlength="4"
                             >
+                        </div>
+                    </div>
+                    
+                    <button id="btn-instrucciones" class="btn-instrucciones">
+                        📖 Instrucciones
+                    </button>
+                </div>
+                
+                <!-- Modal de Instrucciones -->
+                <div id="modal-instrucciones" class="modal-overlay" style="display: none;">
+                    <div class="modal-content modal-instrucciones">
+                        <h3>📖 Cómo Jugar a Impostor</h3>
+                        <div class="instrucciones-contenido">
+                            <h4>🎯 Objetivo del Juego</h4>
+                            <p>Descubrir quién es el impostor mientras el impostor intenta pasar desapercibido.</p>
+                            
+                            <h4>🎮 Cómo Funciona</h4>
+                            <ol>
+                                <li><strong>Crear o unirse a una sesión:</strong> El admin crea una sesión y otros jugadores se unen con el código de 4 dígitos.</li>
+                                <li><strong>Seleccionar categoría:</strong> El admin elige una categoría (ej: Animales, Comida, etc.).</li>
+                                <li><strong>Recibir tu identidad:</strong> 
+                                    <ul>
+                                        <li>Si eres <strong>impostor</strong>: verás "Eres impostor" y no sabrás el concepto/palabra de la categoría.</li>
+                                        <li>Si <strong>NO eres impostor</strong>: verás el concepto/palabra de la categoría.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Discutir y descubrir:</strong> Los jugadores dan pistas del concepto/palabra para demostrar a los otros jugadores que lo saben, pero sin ser tan obvios para que el impostor no lo descubra. Los jugadores pueden hacerse preguntas para confirmar o descartar sospechas.</li>
+                                <li><strong>Acusar al impostor:</strong> Luego de una o más rondas, los usuarios indican quién creen que es el impostor. El usuario más votado debe revelar su identidad.</li>
+                                <li><strong>Revelar identidad:</strong> Cuando estés listo, puedes revelar tu identidad para que todos la vean.</li>
+                            </ol>
+                        </div>
+                        <div class="modal-buttons">
+                            <button id="btn-cerrar-instrucciones" class="btn-confirmar">Entendido</button>
                         </div>
                     </div>
                 </div>

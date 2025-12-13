@@ -23,6 +23,66 @@ function initHomePage() {
         nombreUsuarioInput.value = nombreGuardado;
     }
     
+    // Cargar y mostrar ícono guardado
+    const iconoGuardado = localStorage.getItem('userIcono') || '👤';
+    const iconoActual = document.getElementById('icono-actual');
+    if (iconoActual) {
+        iconoActual.textContent = iconoGuardado;
+    }
+    
+    // Configurar botón para abrir modal de ícono
+    const btnCambiarIcono = document.getElementById('btn-cambiar-icono');
+    const modalIcono = document.getElementById('modal-icono');
+    const btnCerrarIcono = document.getElementById('btn-cerrar-icono');
+    
+    if (btnCambiarIcono && modalIcono) {
+        btnCambiarIcono.addEventListener('click', function() {
+            // Cargar ícono actual y marcar como seleccionado
+            const iconoActual = localStorage.getItem('userIcono') || '👤';
+            const iconosOptions = document.querySelectorAll('.icono-option');
+            iconosOptions.forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.dataset.icono === iconoActual) {
+                    btn.classList.add('selected');
+                }
+            });
+            modalIcono.style.display = 'flex';
+        });
+    }
+    
+    // Configurar selección de íconos en el modal
+    const iconosOptions = document.querySelectorAll('.icono-option');
+    iconosOptions.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remover selección anterior
+            iconosOptions.forEach(b => b.classList.remove('selected'));
+            // Agregar selección actual
+            this.classList.add('selected');
+            // Guardar ícono seleccionado
+            const iconoSeleccionado = this.dataset.icono;
+            localStorage.setItem('userIcono', iconoSeleccionado);
+            // Actualizar ícono en el botón
+            if (iconoActual) {
+                iconoActual.textContent = iconoSeleccionado;
+            }
+        });
+    });
+    
+    // Cerrar modal
+    if (btnCerrarIcono && modalIcono) {
+        btnCerrarIcono.addEventListener('click', function() {
+            modalIcono.style.display = 'none';
+        });
+    }
+    
+    if (modalIcono) {
+        modalIcono.addEventListener('click', function(e) {
+            if (e.target === modalIcono) {
+                modalIcono.style.display = 'none';
+            }
+        });
+    }
+    
     // Función para validar y obtener el nombre del usuario
     function obtenerYValidarNombre() {
         const nombre = nombreUsuarioInput.value.trim();
@@ -59,12 +119,12 @@ function initHomePage() {
         const numeroSesion = generarNumeroSesion();
         // Guardar en localStorage para que esté disponible en la página de sesión
         localStorage.setItem('sessionNumber', numeroSesion);
-        localStorage.setItem('sessionType', 'host');
+        localStorage.setItem('sessionType', 'admin');
         
         // Persistir la sesión en Supabase con el código y el nombre del usuario
         try {
             await saveSessionToSupabase(numeroSesion, { 
-                role: 'host',
+                role: 'admin',
                 usuario: nombre 
             });
         } catch (err) {
@@ -120,12 +180,31 @@ function initHomePage() {
         localStorage.setItem('sessionNumber', numeroSesion);
         localStorage.setItem('sessionType', 'guest');
         
+        // Verificar que el ícono esté guardado en localStorage antes de unirse
+        const iconoGuardado = localStorage.getItem('userIcono');
+        if (!iconoGuardado) {
+            // Si no hay ícono guardado, usar el por defecto y guardarlo
+            localStorage.setItem('userIcono', '👤');
+            console.log('⚠️ No se encontró ícono en localStorage, usando por defecto 👤');
+        } else {
+            console.log('✅ Ícono encontrado en localStorage antes de unirse:', iconoGuardado);
+        }
+        
         // Guardar el participante en Supabase
         try {
             await saveParticipantToSupabase(numeroSesion, { name: nombre, role: 'guest' });
         } catch (err) {
-            console.error('No se pudo guardar el participante en Supabase:', err);
-            alert('Error al unirse a la sesión. Por favor, intenta nuevamente.');
+            console.error('❌ Error al guardar participante en Supabase:', err);
+            console.error('📋 Detalles completos del error:', JSON.stringify(err, null, 2));
+            
+            // Mostrar mensaje más detallado si es un error de permisos
+            if (err.code === 'PGRST301' || (err.message && err.message.includes('permission')) || (err.message && err.message.includes('RLS'))) {
+                alert('Error de permisos: No se pudo guardar el ícono. Verifica la configuración de RLS en Supabase.');
+            } else if (err.message && err.message.includes('column')) {
+                alert('Error: La columna "icono" no existe en la tabla. Ejecuta: ALTER TABLE codigos ADD COLUMN icono TEXT DEFAULT \'👤\';');
+            } else {
+                alert('Error al unirse a la sesión: ' + (err.message || 'Error desconocido'));
+            }
             return;
         }
         
@@ -171,6 +250,31 @@ function initHomePage() {
             }
         }
     });
+    
+    // Configurar botón de instrucciones
+    const btnInstrucciones = document.getElementById('btn-instrucciones');
+    const modalInstrucciones = document.getElementById('modal-instrucciones');
+    const btnCerrarInstrucciones = document.getElementById('btn-cerrar-instrucciones');
+    
+    if (btnInstrucciones && modalInstrucciones) {
+        btnInstrucciones.addEventListener('click', function() {
+            modalInstrucciones.style.display = 'flex';
+        });
+    }
+    
+    if (btnCerrarInstrucciones && modalInstrucciones) {
+        btnCerrarInstrucciones.addEventListener('click', function() {
+            modalInstrucciones.style.display = 'none';
+        });
+    }
+    
+    if (modalInstrucciones) {
+        modalInstrucciones.addEventListener('click', function(e) {
+            if (e.target === modalInstrucciones) {
+                modalInstrucciones.style.display = 'none';
+            }
+        });
+    }
 }
 
 // Funcionalidad para la página de sesión
@@ -301,21 +405,38 @@ async function inicializarJuego(sessionNumber) {
     // Si no se encontró el juego, intentar de nuevo después de un breve delay
     // (puede ser que se acabe de guardar y aún no esté disponible)
     if (!hayJuegoActivo) {
-        console.log('⏳ Juego no encontrado inicialmente, reintentando en 1 segundo...');
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('⏳ Juego no encontrado inicialmente, reintentando en 2 segundos...');
+        await new Promise(resolve => setTimeout(resolve, 2000));
         hayJuegoActivo = await cargarEstadoJuego(sessionNumber);
+        
+        // Si aún no se encuentra, intentar una vez más
+        if (!hayJuegoActivo) {
+            console.log('⏳ Juego aún no encontrado, reintentando una vez más en 2 segundos...');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            hayJuegoActivo = await cargarEstadoJuego(sessionNumber);
+        }
     }
     
-    // Verificar si el usuario es host
-    const sessionType = localStorage.getItem('sessionType');
-    const esHost = sessionType === 'host';
+    // Obtener número de usuarios para determinar si mostrar el botón
+    const usuarios = await obtenerUsuariosSesion(sessionNumber);
+    const usuariosValidos = usuarios.filter(usuario => 
+        usuario && usuario.usuario && usuario.usuario.trim() !== ''
+    );
     
-    // Mostrar botón "Nuevo Juego" siempre al host (tanto si hay juego activo como si no)
+    // Verificar si el usuario es admin
+    const sessionType = localStorage.getItem('sessionType');
+    const esAdmin = sessionType === 'admin';
+    
+    // Actualizar estado del botón y mensaje según el número de usuarios
+    actualizarEstadoJuegoSegunUsuarios(usuariosValidos.length);
+    
+    // Configurar el botón solo si hay 3 o más usuarios y es admin
     const botonNuevoJuego = document.getElementById('btn-nuevo-juego');
-    if (botonNuevoJuego && esHost) {
-        botonNuevoJuego.style.display = 'block';
+    if (botonNuevoJuego && esAdmin && usuariosValidos.length >= 3) {
+        // Solo configurar si el botón está visible (hay 3+ usuarios)
         configurarBotonNuevoJuego(hayJuegoActivo);
     } else if (botonNuevoJuego) {
+        // Asegurar que el botón esté oculto si no cumple las condiciones
         botonNuevoJuego.style.display = 'none';
     }
     
@@ -383,16 +504,40 @@ function configurarBotonVolverInicio() {
     const btnConfirmar = document.getElementById('btn-confirmar-salir');
     const btnCancelar = document.getElementById('btn-cancelar-salir');
     
-    if (!botonVolverInicio || !modal) return;
+    if (!botonVolverInicio) {
+        console.error('❌ No se encontró el botón btn-volver-inicio');
+        return;
+    }
+    
+    if (!modal) {
+        console.error('❌ No se encontró el modal modal-salir-sesion');
+        return;
+    }
     
     // Evitar agregar múltiples event listeners
-    if (botonVolverInicio.dataset.configured === 'true') return;
+    if (botonVolverInicio.dataset.configured === 'true') {
+        console.log('ℹ️ Botón volver al inicio ya configurado');
+        return;
+    }
     botonVolverInicio.dataset.configured = 'true';
     
+    console.log('✅ Configurando botón volver al inicio');
+    
+    // Remover cualquier event listener anterior
+    botonVolverInicio.onclick = null;
+    
     // Mostrar modal al hacer clic en "Volver al inicio"
-    botonVolverInicio.onclick = function() {
-        modal.style.display = 'flex';
-    };
+    botonVolverInicio.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('🖱️ Click en botón volver al inicio');
+        if (modal) {
+            modal.style.display = 'flex';
+            console.log('✅ Modal mostrado');
+        } else {
+            console.error('❌ Modal no encontrado al hacer clic');
+        }
+    });
     
     // Confirmar: redirigir al inicio
     if (btnConfirmar) {
@@ -566,7 +711,7 @@ async function cargarEstadoJuego(sessionNumber) {
 }
 
 // Mostrar resultado del juego a cada usuario
-function mostrarResultadoJuego(estadoJuego, userName) {
+async function mostrarResultadoJuego(estadoJuego, userName) {
     console.log('🎮 Mostrando resultado del juego:', estadoJuego);
     
     const botonNuevoJuego = document.getElementById('btn-nuevo-juego');
@@ -577,16 +722,23 @@ function mostrarResultadoJuego(estadoJuego, userName) {
         return;
     }
     
-    // Mostrar botón "Nuevo Juego" solo al host
+    // Obtener número de usuarios actual para verificar si mostrar el botón
+    const sessionNumber = localStorage.getItem('sessionNumber');
+    const usuarios = await obtenerUsuariosSesion(sessionNumber);
+    const usuariosValidos = usuarios.filter(usuario => 
+        usuario && usuario.usuario && usuario.usuario.trim() !== ''
+    );
+    
+    // Actualizar estado del botón y mensaje según el número de usuarios
+    actualizarEstadoJuegoSegunUsuarios(usuariosValidos.length);
+    
+    // Configurar el botón solo si hay 3 o más usuarios y es admin
     const sessionType = localStorage.getItem('sessionType');
-    const esHost = sessionType === 'host';
-    if (botonNuevoJuego && esHost) {
-        botonNuevoJuego.style.display = 'block';
+    const esAdmin = sessionType === 'admin';
+    if (botonNuevoJuego && esAdmin && usuariosValidos.length >= 3) {
         // Reconfigurar el botón ya que ahora hay juego activo
         botonNuevoJuego.dataset.configured = 'false';
         configurarBotonNuevoJuego(true);
-    } else if (botonNuevoJuego) {
-        botonNuevoJuego.style.display = 'none';
     }
     
     // Mostrar resultado
@@ -602,8 +754,7 @@ function mostrarResultadoJuego(estadoJuego, userName) {
     if (elementoImpostor) {
         // Crear botón para ver el concepto/palabra
         elementoImpostor.innerHTML = `
-            <div class="categoria-texto">Categoría: ${estadoJuego.categoria}</div>
-            <button id="btn-ver-concepto" class="btn-ver-concepto">Ver concepto o palabra</button>
+            <button id="btn-ver-concepto" class="btn-ver-concepto">Categoría: ${estadoJuego.categoria}<br>Ver concepto o palabra</button>
             <div id="contenido-mostrado" class="contenido-mostrado" style="display: none;">
                 ${esImpostor ? '<div class="mensaje-impostor">Eres impostor</div>' : `<div class="elemento-mostrado">${estadoJuego.elemento}</div>`}
             </div>
@@ -903,11 +1054,16 @@ async function obtenerUsuariosSesion(codigoSesion) {
     try {
         const { data, error } = await window.supabaseClient
             .from('codigos')
-            .select('usuario, rol')
+            .select('usuario, rol, icono')
             .eq('codigo', String(codigoSesion))
             .eq('app', 'Impostor1')
             .not('usuario', 'is', null)
             .order('created_at', { ascending: true });
+        
+        // Debug: verificar que se está obteniendo el rol
+        if (data && data.length > 0) {
+            console.log('👥 Usuarios obtenidos con roles:', data.map(u => ({ usuario: u.usuario, rol: u.rol })));
+        }
 
         if (error) {
             console.error('Error obteniendo usuarios:', error);
@@ -916,13 +1072,53 @@ async function obtenerUsuariosSesion(codigoSesion) {
 
         // Filtrar usuarios con nombre NULL o vacío (doble verificación)
         const usuariosValidos = (data || []).filter(usuario => 
-            usuario.usuario && usuario.usuario.trim() !== ''
+            usuario && usuario.usuario && usuario.usuario.trim() !== ''
         );
 
         return usuariosValidos;
     } catch (err) {
         console.error('Error obteniendo usuarios:', err);
         return [];
+    }
+}
+
+// Función para actualizar el estado del botón y mensaje según el número de usuarios
+function actualizarEstadoJuegoSegunUsuarios(numeroUsuarios) {
+    const sessionNumber = localStorage.getItem('sessionNumber');
+    const sessionType = localStorage.getItem('sessionType');
+    const esAdmin = sessionType === 'admin';
+    const botonNuevoJuego = document.getElementById('btn-nuevo-juego');
+    const mensajeEsperando = document.getElementById('mensaje-esperando');
+    const numeroSesionEsperando = document.getElementById('numero-sesion-esperando');
+    
+    // Actualizar número de sesión en el mensaje
+    if (numeroSesionEsperando && sessionNumber) {
+        numeroSesionEsperando.textContent = sessionNumber;
+    }
+    
+    // Si hay menos de 3 usuarios, mostrar mensaje de espera
+    if (numeroUsuarios < 3) {
+        if (mensajeEsperando) {
+            mensajeEsperando.style.display = 'block';
+        }
+        if (botonNuevoJuego) {
+            botonNuevoJuego.style.display = 'none';
+        }
+    } else {
+        // Si hay 3 o más usuarios, ocultar mensaje y mostrar botón (solo al admin)
+        if (mensajeEsperando) {
+            mensajeEsperando.style.display = 'none';
+        }
+        if (botonNuevoJuego && esAdmin) {
+            botonNuevoJuego.style.display = 'block';
+            // Asegurar que el botón esté configurado
+            if (botonNuevoJuego.dataset.configured !== 'true') {
+                const hayJuegoActivo = juegoActual !== null && juegoActual !== undefined;
+                configurarBotonNuevoJuego(hayJuegoActivo);
+            }
+        } else if (botonNuevoJuego) {
+            botonNuevoJuego.style.display = 'none';
+        }
     }
 }
 
@@ -938,32 +1134,44 @@ function mostrarUsuarios(usuarios, estadoJuego = null) {
 
     if (usuariosValidos.length === 0) {
         listaUsuarios.innerHTML = '<p class="sin-usuarios">No hay usuarios en la sesión</p>';
+        actualizarEstadoJuegoSegunUsuarios(0);
         return;
     }
+    
+    // Actualizar estado del botón y mensaje según el número de usuarios
+    actualizarEstadoJuegoSegunUsuarios(usuariosValidos.length);
 
     // Obtener lista de usuarios que han revelado su identidad
     const identidadesReveladas = estadoJuego && estadoJuego.identidadesReveladas ? estadoJuego.identidadesReveladas : {};
     const impostor = estadoJuego && estadoJuego.impostor ? estadoJuego.impostor : null;
 
     listaUsuarios.innerHTML = usuariosValidos.map(usuario => {
-        const esHost = usuario.rol === 'host';
-        const badge = esHost ? '<span class="badge-host">Host</span>' : '';
+        // Verificar si es admin (también verificar 'host' por compatibilidad con datos antiguos)
+        const esAdmin = usuario.rol === 'admin' || usuario.rol === 'host';
+        const badge = esAdmin ? '<span class="badge-admin">Admin</span>' : '';
         const haRevelado = identidadesReveladas[usuario.usuario] === true;
         const esImpostorUsuario = impostor === usuario.usuario;
         
         let identidadBadge = '';
         if (haRevelado) {
             if (esImpostorUsuario) {
-                identidadBadge = '<span class="badge-impostor">Impostor</span>';
+                identidadBadge = '<span class="badge-impostor">EL IMPOSTOR</span>';
             } else {
                 identidadBadge = '<span class="badge-no-impostor">No Impostor</span>';
             }
         }
         
+        // Obtener ícono del usuario desde la base de datos, o usar el por defecto
+        const iconoUsuario = usuario.icono || '👤';
+        
+        // Debug: verificar que el rol y el ícono se están obteniendo
+        console.log('👤 Usuario:', usuario.usuario, '| Rol:', usuario.rol, '| Es Admin:', esAdmin, '| Ícono:', iconoUsuario);
+        
         return `
             <div class="usuario-item">
-                <span class="nombre-usuario">${usuario.usuario}</span>
-                <div class="badges-container">${badge} ${identidadBadge}</div>
+                <span class="usuario-icono">${iconoUsuario}</span>
+                <span class="nombre-usuario">${usuario.usuario} ${badge}</span>
+                <div class="badges-container">${identidadBadge}</div>
             </div>
         `;
     }).join('');
@@ -971,12 +1179,19 @@ function mostrarUsuarios(usuarios, estadoJuego = null) {
 
 // Función para cargar usuarios y suscribirse a cambios en tiempo real
 async function cargarYSuscribirUsuarios(codigoSesion) {
-    // Cargar usuarios iniciales
-    const usuarios = await obtenerUsuariosSesion(codigoSesion);
-    // Cargar estado del juego para mostrar identidades reveladas
-    const estadoJuego = juegoActual || null;
-    mostrarUsuarios(usuarios, estadoJuego);
-    console.log('👥 Usuarios iniciales cargados:', usuarios.length);
+    let usuarios = [];
+    
+    try {
+        // Cargar usuarios iniciales
+        usuarios = await obtenerUsuariosSesion(codigoSesion);
+        console.log('👥 Usuarios obtenidos:', usuarios);
+        // Cargar estado del juego para mostrar identidades reveladas
+        const estadoJuego = juegoActual || null;
+        mostrarUsuarios(usuarios, estadoJuego);
+        console.log('👥 Usuarios iniciales cargados:', usuarios.length);
+    } catch (err) {
+        console.error('❌ Error en cargarYSuscribirUsuarios:', err);
+    }
 
     // Verificar que Supabase está disponible
     if (typeof window.supabaseClient === 'undefined') {
@@ -1021,6 +1236,12 @@ async function cargarYSuscribirUsuarios(codigoSesion) {
                 mostrarUsuarios(usuariosActualizados, estadoJuegoActualizado);
                 ultimoConteoUsuarios = usuariosActualizados.length;
                 console.log('✅ Lista actualizada con', usuariosActualizados.length, 'usuarios');
+                
+                // Actualizar estado del botón y mensaje según el número de usuarios
+                const usuariosValidos = usuariosActualizados.filter(usuario => 
+                    usuario && usuario.usuario && usuario.usuario.trim() !== ''
+                );
+                actualizarEstadoJuegoSegunUsuarios(usuariosValidos.length);
             }
         )
         .subscribe((status, err) => {
@@ -1076,6 +1297,12 @@ function iniciarPollingUsuarios(codigoSesion) {
                     const estadoJuego = juegoActual || null;
                     mostrarUsuarios(usuarios, estadoJuego);
                     window.ultimoConteoUsuarios = conteoActual;
+                    
+                    // Actualizar estado del botón y mensaje según el número de usuarios
+                    const usuariosValidos = usuarios.filter(usuario => 
+                        usuario && usuario.usuario && usuario.usuario.trim() !== ''
+                    );
+                    actualizarEstadoJuegoSegunUsuarios(usuariosValidos.length);
                 }
             }
         } catch (err) {
@@ -1190,12 +1417,17 @@ async function saveSessionToSupabase(sessionId, meta = {}) {
             throw new Error('El nombre del usuario es requerido para crear una sesión');
         }
         
+        // Obtener el ícono del usuario desde localStorage
+        const iconoUsuario = localStorage.getItem('userIcono') || '👤';
+        console.log('🎨 Ícono del admin obtenido de localStorage:', iconoUsuario);
+        
         // Preparar los datos a insertar
         const datosInsert = {
             codigo: String(sessionId),
             usuario: nombreUsuario.trim(),
-            rol: meta.role || 'host',
-            app: 'Impostor1'
+            rol: meta.role || 'admin',
+            app: 'Impostor1',
+            icono: iconoUsuario
         };
         
         console.log('📤 Insertando sesión con datos:', datosInsert);
@@ -1212,7 +1444,7 @@ async function saveSessionToSupabase(sessionId, meta = {}) {
             console.error('Detalles del error:', JSON.stringify(error, null, 2));
             // Si falla por falta de columnas, mostrar mensaje útil
             if (error.message && error.message.includes('column')) {
-                console.warn('⚠️ La tabla "codigos" necesita las columnas: codigo (text), usuario (text), rol (text), app (text)');
+                console.warn('⚠️ La tabla "codigos" necesita las columnas: codigo (text), usuario (text), rol (text), app (text), icono (text)');
             }
             // Si falla por permisos RLS
             if (error.code === 'PGRST301' || (error.message && error.message.includes('permission')) || (error.message && error.message.includes('RLS'))) {
@@ -1250,39 +1482,62 @@ async function saveParticipantToSupabase(sessionId, participant = {}) {
             throw new Error('El nombre del usuario es requerido');
         }
         
+        // Obtener el ícono del usuario desde localStorage
+        const iconoUsuario = localStorage.getItem('userIcono') || '👤';
+        console.log('🎨 Ícono del usuario obtenido de localStorage:', iconoUsuario);
+        console.log('👤 Nombre del usuario:', nombreUsuario);
+        console.log('🎭 Rol del usuario:', participant.role || 'guest');
+        
         // Preparar los datos a insertar
         const datosInsert = {
             codigo: String(sessionId),
             usuario: nombreUsuario.trim(),
             rol: participant.role || 'guest',
-            app: 'Impostor1'
+            app: 'Impostor1',
+            icono: iconoUsuario
         };
         
-        console.log('📤 Insertando participante con datos:', datosInsert);
+        console.log('📤 Insertando participante con datos COMPLETOS:', JSON.stringify(datosInsert, null, 2));
         
         // Insertar participante en la tabla codigos
-        // Nota: La tabla necesita columnas: codigo, usuario, rol, app
+        // Nota: La tabla necesita columnas: codigo, usuario, rol, app, icono
         const { data, error } = await window.supabaseClient
             .from('codigos')
             .insert(datosInsert)
             .select();
 
         if (error) {
-            console.error('Error guardando participante en Supabase:', error);
-            console.error('Detalles del error:', JSON.stringify(error, null, 2));
+            console.error('❌ ERROR guardando participante en Supabase:', error);
+            console.error('📋 Código del error:', error.code);
+            console.error('📋 Mensaje del error:', error.message);
+            console.error('📋 Detalles completos:', JSON.stringify(error, null, 2));
+            console.error('📋 Datos que se intentaron insertar:', JSON.stringify(datosInsert, null, 2));
+            
             // Si falla por falta de columnas, mostrar mensaje útil
             if (error.message && error.message.includes('column')) {
-                console.warn('⚠️ La tabla "codigos" necesita las columnas: codigo (text), usuario (text), rol (text), app (text)');
+                console.error('⚠️ ERROR: La columna "icono" no existe en la tabla "codigos"');
+                console.error('💡 Solución: Ejecuta en Supabase SQL Editor:');
+                console.error('   ALTER TABLE codigos ADD COLUMN icono TEXT DEFAULT \'👤\';');
             }
             // Si falla por permisos RLS
             if (error.code === 'PGRST301' || (error.message && error.message.includes('permission')) || (error.message && error.message.includes('RLS'))) {
-                console.error('⚠️ Error de permisos: Verifica que Row Level Security (RLS) esté configurado correctamente en Supabase');
+                console.error('⚠️ ERROR de permisos RLS: Los guests no pueden insertar el campo "icono"');
+                console.error('💡 Solución: Verifica las políticas RLS en Supabase para permitir INSERT con el campo icono');
             }
             throw error;
         }
 
-        console.log('✅ Participante añadido en Supabase para sesión:', sessionId);
-        console.log('📥 Datos guardados:', data);
+        console.log('✅ Participante añadido exitosamente en Supabase para sesión:', sessionId);
+        console.log('📥 Datos guardados (respuesta completa):', JSON.stringify(data, null, 2));
+        
+        // Verificar que el ícono se guardó correctamente
+        if (data && data[0]) {
+            const iconoGuardado = data[0].icono;
+            console.log('🎨 Ícono guardado en la base de datos:', iconoGuardado);
+            if (!iconoGuardado || iconoGuardado === null) {
+                console.warn('⚠️ ADVERTENCIA: El ícono no se guardó en la base de datos (es null o undefined)');
+            }
+        }
     } catch (err) {
         console.error('Error guardando participante en Supabase:', err);
         throw err;

@@ -49,10 +49,10 @@
                 return;
             }
             
-            // Verificar que el usuario es host
+            // Verificar que el usuario es admin
             const sessionType = localStorage.getItem('sessionType');
-            if (sessionType !== 'host') {
-                alert('Solo el host puede iniciar el juego. Redirigiendo...');
+            if (sessionType !== 'admin') {
+                alert('Solo el admin puede iniciar el juego. Redirigiendo...');
                 window.location.href = 'sesion.html';
                 return;
             }
@@ -117,8 +117,13 @@
             // Obtener lista de usuarios de la sesión
             const usuarios = await obtenerUsuariosSesion(sessionNumber);
             
-            if (usuarios.length < 2) {
-                alert('Se necesitan al menos 2 usuarios para jugar');
+            // Filtrar usuarios válidos
+            const usuariosValidos = usuarios.filter(usuario => 
+                usuario && usuario.usuario && usuario.usuario.trim() !== ''
+            );
+            
+            if (usuariosValidos.length < 3) {
+                alert('Se necesitan al menos 3 usuarios para jugar');
                 return;
             }
             
@@ -127,8 +132,8 @@
             const elementoElegido = elementos[Math.floor(Math.random() * elementos.length)];
             
             // Elegir impostor aleatorio
-            const impostorIndex = Math.floor(Math.random() * usuarios.length);
-            const impostor = usuarios[impostorIndex];
+            const impostorIndex = Math.floor(Math.random() * usuariosValidos.length);
+            const impostor = usuariosValidos[impostorIndex];
             
             // Crear estado del juego
             const estadoJuego = {
@@ -148,7 +153,7 @@
             console.log('✅ Juego guardado, esperando confirmación...');
             
             // Esperar un momento para asegurar que Supabase procese el cambio
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 2000));
             
             // Verificar que se guardó correctamente antes de redirigir
             console.log('🔍 Verificando que el juego se guardó correctamente...');
