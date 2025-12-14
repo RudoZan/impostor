@@ -10,7 +10,10 @@
     <main>
         <section class="hero">
             <div class="welcome-container">
-                <h2>IMPOSTOR</h2>
+                <h2 class="titulo-con-imagen">
+                    <img src="impostor.png" alt="Impostor" class="logo-impostor">
+                    IMPOSTOR
+                </h2>
                 
                 <div class="sesion-info-display">
                     <div class="session-info-large">
@@ -32,6 +35,15 @@
             </div>
         </section>
     </main>
+    
+    <!-- Modal de carga -->
+    <div id="modal-cargando" class="modal-overlay modal-cargando" style="display: none;">
+        <div class="modal-content modal-cargando-content">
+            <div class="spinner"></div>
+            <h3>Cargando nuevo juego...</h3>
+            <p>Por favor espera mientras se genera el juego</p>
+        </div>
+    </div>
 
     <script src="script.js"></script>
     <!-- Supabase SDK for database integration -->
@@ -100,6 +112,13 @@
                 botonCategoria.addEventListener('click', function() {
                     // Agregar clase selected para mantener el color naranja
                     botonCategoria.classList.add('selected');
+                    
+                    // Mostrar popup de carga inmediatamente
+                    const modalCargando = document.getElementById('modal-cargando');
+                    if (modalCargando) {
+                        modalCargando.style.display = 'flex';
+                    }
+                    
                     iniciarJuegoConCategoria(categoria);
                 });
                 listaCategorias.appendChild(botonCategoria);
