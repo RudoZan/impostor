@@ -461,6 +461,43 @@ let categoriasData = {
   "Profesiones": [
     "Profesión en educación", "Profesión en tecnología", "Profesión en salud", "Profesión en construcción de edificios", "Profesión creativa",
     "Profesión que trabaja con números", "Profesión que trabaja con personas", "Profesión que requiere estudios universitarios", "Profesión de servicio", "Profesión artística"
+  ],
+  "Ramos PLEMC Malla Antigua": [
+    "Introducción a la Pedagogía en Matemática y Computación",
+    "Álgebra I",
+    "Matemática Básica",
+    "Computación I",
+    "Inglés I",
+    "Sociología y Antropología de la Educación",
+    "Álgebra II",
+    "Cálculo I",
+    "Computación II",
+    "Inglés II",
+    "Psicología del Aprendizaje Matemático",
+    "Álgebra III",
+    "Sistemas Operativos y Redes",
+    "Probabilidad y Estadística",
+    "Cálculo III",
+    "Modelamiento de la Información y Sesarrollo de Software",
+    "Taller de Inglés I",
+    "Desarrollo Curricular Matemático",
+    "Práctica I",
+    "Fundamentos de la Educación Matemática",
+    "Didáctica del Álgebra y el Cálculo",
+    "Estadística",
+    "Geometría I",
+    "Medición y Evaluación de la Matemática",
+    "Fundamentos de la Matemática I",
+    "Fundamentos de la Matemática II",
+    "Geometría II",
+    "Computación Educativa",
+    "Historia y Epistemología de la Matemática",
+    "Taller de Herramientas Didácticas de la Matemática",
+    "Didáctica de la Geometría y la Estadística",
+    "Psicometría",
+    "Taller II de Herramientas Didácticas de la Matemática",
+    "Metodología de la Investigación en la Educación Matemática",
+    "Aplicaciones Didácticas de la Computación"
   ]
 };
 
