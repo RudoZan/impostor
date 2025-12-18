@@ -435,32 +435,102 @@ async function initSesionPage() {
 // Variables globales del juego
 let categoriasData = {
 "Animales": [
-  "León", "Águila", "Delfín", "Canguro", "Tiburón",
-  "Gato", "Perro", "Elefante", "Serpiente", "Murciélago"
+  "León", "Tigre", "Elefante", "Jirafa", "Cebra",
+  "Oso", "Lobo", "Zorro", "Conejo", "Ratón",
+  "Caballo", "Vaca", "Cerdo", "Oveja", "Cabra",
+  "Gato", "Perro", "Pájaro", "Águila", "Búho",
+  "Delfín", "Ballena", "Tiburón", "Pez", "Pulpo",
+  "Serpiente", "Cocodrilo", "Tortuga", "Rana", "Araña",
+  "Pantera", "Leopardo", "Hipopótamo", "Rinoceronte", "Canguro",
+  "Koala", "Panda", "Camello", "Loro", "Hámster",
+  "Cisne", "Chimpancé", "Gorila", "Orangután", "Condor",
+  "Ardilla", "Erizo", "Mapache", "Zorrillo", "Castor"
 ],
 "Lugares": [
   "Playa", "Montaña", "Escuela", "Hospital", "Museo", 
-  "Cine", "Parque", "Casa", "Restaurante", "Aeropuerto", "Estacionamiento"
+  "Cine", "Parque", "Casa", "Restaurante", "Aeropuerto",
+  "Estacionamiento", "Supermercado", "Banco", "Farmacia", "Iglesia",
+  "Estadio", "Teatro", "Biblioteca", "Universidad", "Hotel",
+  "Plaza", "Centro Comercial", "Gimnasio", "Piscina", "Zoológico",
+  "Cafetería", "Bar", "Discoteca", "Spa", "Salón de Belleza",
+  "Oficina", "Taller", "Granja", "Bosque", "Desierto",
+  "Río", "Lago", "Isla", "Volcán", "Cueva",
+  "Estación de Tren", "Terminal de Buses", "Puerto", "Mercado", "Tienda",
+  "Fábrica", "Cementerio", "Palacio", "Castillo", "Torre"
 ],
 "Objetos": [
   "Hielo", "Cuerda", "Pantalla", "Llave", "Sombrero", 
-  "Libro", "Teléfono", "Silla", "Reloj", "Pelota", 
+  "Libro", "Teléfono", "Silla", "Reloj", "Pelota",
+  "Mesa", "Cama", "Puerta", "Ventana", "Espejo",
+  "Lámpara", "Cuchara", "Tenedor", "Cuchillo", "Plato",
+  "Vaso", "Taza", "Botella", "Bolsa", "Maleta",
+  "Zapatos", "Camisa", "Pantalón", "Gafas", "Gorra",
+  "Coche", "Bicicleta", "Avión", "Barco", "Tren",
+  "Lápiz", "Bolígrafo", "Cuaderno", "Carpeta", "Mochila",
+  "Cámara", "Radio", "Computadora", "Tablet", "Auriculares",
+  "Martillo", "Destornillador", "Clavo", "Tornillo", "Herramienta"
 ],
 "Comida": [
+    "Pizza", "Hamburguesa", "Hot dog", "Tacos", "Sushi",
+    "Pasta", "Arroz", "Pollo", "Carne", "Pescado",
+    "Ensalada", "Sopa", "Sandwich", "Burrito", "Quesadilla",
+    "Lasagna", "Ravioli", "Spaghetti", "Macarrones", "Risotto",
+    "Paella", "Ceviche", "Empanada", "Arepa", "Tamal",
+    "Causa", "Lomo saltado", "Pollo a la brasa", "Chupe", "Ají de gallina",
+    "Helado", "Pastel", "Torta", "Galletas", "Chocolate",
+    "Pan", "Queso", "Huevo", "Leche", "Yogur",
+    "Fruta", "Verdura", "Papas fritas", "Nachos", "Alitas",
+    "Pescado frito", "Camarones", "Langosta", "Cangrejo", "Pulpo"
+  ],
+  "Tipos de Comida": [
     "Lleva carne", "Se come fría", "Comida salada", "Lleva pasta",
-    "Se cocina al horno", "Sirve de postre", "Hecha con Harina", "Se puede comer con la mano"
+    "Se cocina al horno", "Sirve de postre", "Hecha con Harina", "Se puede comer con la mano",
+    "Comida picante", "Comida dulce", "Comida vegana", "Comida vegetariana"
   ],
 "Electrodomésticos": [
     "Refrigerador", "Lavadora", "Secadora", "Microondas", "Horno", "Licuadora", "Batidora", "Cafetera", "Tostadora", "Aspiradora",
-    "Plancha", "Ventilador", "Aire acondicionado", "Calefactor", "Televisor", "Radio", "Reproductor de DVD", "Lavavajillas", "Horno eléctrico" 
+    "Plancha", "Ventilador", "Aire acondicionado", "Calefactor", "Televisor", "Radio", "Reproductor de DVD", "Lavavajillas", "Horno eléctrico",
+    "Congelador", "Horno de gas", "Freidora", "Olla arrocera", "Exprimidor", "Procesador de alimentos",
+    "Hervidor eléctrico", "Plancha de vapor", "Secador de pelo", "Rizador de pelo", "Depiladora", "Afeitadora eléctrica", "Cepillo de dientes eléctrico",
+    "Lámpara", "Reproductor de música", "Reloj despertador",
+    "Máquina de coser", "Cafetera express", "Campana extractora",
+    "Vaporera", "Estufa"
   ],
-"Deportes": [
+  "Deportes": [
+    "Fútbol", "Baloncesto", "Voleibol", "Tenis", "Fútbol Americano",
+    "Béisbol", "Rugby", "Hockey", "Natación", "Atletismo",
+    "Ciclismo", "Boxeo", "Karate", "Judo", "Taekwondo",
+    "Esgrima", "Gimnasia", "Patinaje", "Esquí", "Snowboard",
+    "Surf", "Buceo", "Remo", "Vela", "Pesca",
+    "Golf", "Bádminton", "Squash", "Tenis de mesa", "Balonmano o Handball",
+    "Waterpolo", "Polo", "Cricket", "Ultimate Frisbee",
+    "Escalada", "Parapente", "Paracaidismo", "Triatlón", "Maratón",
+    "Carrera", "Salto", "Lanzamiento", "Lucha", "Arquería",
+    "Tiro con arco", "Equitación", "Automovilismo", "Motociclismo", "Carrera de caballos",
+    "Ajedrez"
+  ],
+  "Tipos de Deportes": [
     "Deporte con pelota", "Deporte acuático", "Deporte de invierno", "Deporte individual", "Deporte en equipo",
-    "Deporte olímpico", "Deporte que se juega al aire libre", "Deporte de contacto", "Deporte con raqueta", "Deporte de velocidad"
+    "Deporte olímpico", "Deporte que se juega al aire libre", "Deporte de contacto", "Deporte con raqueta", "Deporte de velocidad",
+    "Deporte extremo", "Deporte de resistencia"
   ],
   "Profesiones": [
-    "Profesión en educación", "Profesión en tecnología", "Profesión en salud", "Profesión en construcción de edificios", "Profesión creativa",
-    "Profesión que trabaja con números", "Profesión que trabaja con personas", "Profesión que requiere estudios universitarios", "Profesión de servicio", "Profesión artística"
+    "Médico", "Enfermero", "Profesor", "Ingeniero", "Abogado",
+    "Arquitecto", "Contador", "Psicólogo", "Veterinario", "Farmacéutico",
+    "Dentista", "Policía", "Bombero", "Piloto", "Capitán",
+    "Chef", "Cocinero", "Mesero", "Camarero", "Barbero",
+    "Peluquero", "Mecánico", "Electricista", "Plomero", "Carpintero",
+    "Pintor", "Escritor", "Periodista", "Actor", "Músico",
+    "Artista", "Diseñador", "Fotógrafo", "Videógrafo", "Programador",
+    "Secretario", "Recepcionista", "Vendedor", "Comerciante", "Empresario",
+    "Banquero", "Economista", "Administrador", "Gerente", "Director",
+    "Soldado", "Marinero", "Guardia", "Seguridad", "Conductor"
+  ],
+
+  "Tipos de Profesión": [
+    "Profesión en educación", "Profesión en tecnología", "Profesión en salud", "Profesión en construcción de edificios", "Profesión creativa", "Profesión lilegal",
+    "Profesión que trabaja con números", "Profesión que trabaja con personas", "Profesión que requiere estudios universitarios", "Profesión de servicio", "Profesión artística",
+    "Profesión en transporte"
   ],
   "Ramos PLEMC Malla Antigua": [
     "Introducción a la Pedagogía en Matemática y Computación",
