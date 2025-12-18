@@ -763,7 +763,7 @@ async function guardarEstadoJuego(sessionNumber, estadoJuego) {
     }
     
     try {
-        const versionJuego = '1.0'; // Versión del juego
+        const versionJuego = '1.1'; // Versión del juego
         
         // Siempre insertar un nuevo registro para cada juego
         // Esto permite tener múltiples juegos en la misma sesión y detectar nuevos juegos
@@ -823,7 +823,7 @@ async function cargarEstadoJuego(sessionNumber) {
     }
     
     try {
-        const versionJuego = '1.0'; // Versión del juego
+        const versionJuego = '1.1'; // Versión del juego
         
         console.log('🔍 Buscando juego activo para sesión:', sessionNumber);
         
