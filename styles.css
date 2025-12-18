@@ -1014,8 +1014,9 @@ footer p {
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     position: relative;
-    width: 100%;
-    max-width: 300px;
+    width: auto;
+    min-width: 150px;
+    max-width: 210px;
 }
 
 .btn-categoria:hover {
