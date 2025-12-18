@@ -532,7 +532,7 @@ let categoriasData = {
     "Profesión que trabaja con números", "Profesión que trabaja con personas", "Profesión que requiere estudios universitarios", "Profesión de servicio", "Profesión artística",
     "Profesión en transporte"
   ],
-  "Ramos PLEMC Malla Antigua": [
+  "Ramos PLEMC": [
     "Introducción a la Pedagogía en Matemática y Computación",
     "Álgebra I",
     "Matemática Básica",
