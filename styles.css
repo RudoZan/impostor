@@ -139,6 +139,7 @@ main {
     margin-bottom: 1rem;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     border: 3px solid rgba(255, 107, 107, 0.3);
+    overflow: visible;
 }
 
 .welcome-container {
@@ -998,6 +999,7 @@ footer p {
     align-items: center;
     gap: 0.4rem;
     margin-top: 0.5rem;
+    width: 100%;
 }
 
 .btn-categoria {
@@ -1101,6 +1103,19 @@ footer p {
     .elemento-item {
         font-size: 0.75rem;
         padding: 0.2rem 0;
+    }
+    
+    .lista-categorias {
+        max-height: none;
+        overflow: visible;
+    }
+    
+    .selector-categoria {
+        overflow: visible;
+    }
+    
+    .welcome-container {
+        overflow: visible;
     }
 }
 
