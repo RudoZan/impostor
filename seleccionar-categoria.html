@@ -128,7 +128,7 @@
                 // Event listener para click normal
                 botonCategoria.addEventListener('click', function(e) {
                     // Solo ejecutar si no se estaba manteniendo presionado
-                    if (!isPressing) {
+                    if (!isPressing && !pressTimer) {
                         // Agregar clase selected para mantener el color naranja
                         botonCategoria.classList.add('selected');
                         
@@ -157,19 +157,16 @@
                 
                 // Event listeners para mantener presionado (touch)
                 botonCategoria.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
                     iniciarTimerPresionado(categoria);
-                });
+                }, { passive: true });
                 
                 botonCategoria.addEventListener('touchend', function(e) {
-                    e.preventDefault();
                     cancelarTimerPresionado();
-                });
+                }, { passive: true });
                 
                 botonCategoria.addEventListener('touchcancel', function(e) {
-                    e.preventDefault();
                     cancelarTimerPresionado();
-                });
+                }, { passive: true });
                 
                 listaCategorias.appendChild(botonCategoria);
             });
@@ -190,10 +187,8 @@
                 clearTimeout(pressTimer);
                 pressTimer = null;
             }
-            // Esperar un poco antes de resetear isPressing para evitar que el click se ejecute
-            setTimeout(function() {
-                isPressing = false;
-            }, 100);
+            // Resetear isPressing inmediatamente
+            isPressing = false;
         }
         
         // Mostrar elementos de la categoría en el popup
