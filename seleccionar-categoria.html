@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seleccionar Categoría - El Impostor</title>
+    <meta name="description" content="Selecciona una categoría para iniciar un nuevo juego de Impostor.">
+    <meta name="keywords" content="impostor, juego, categoría, seleccionar">
+    <meta name="author" content="Astutosoft">
+    <meta name="theme-color" content="#ff6b6b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Impostor">
+    <title>Impostor - Seleccionar Categoría</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,7 +18,7 @@
         <section class="hero">
             <div class="welcome-container">
                 <h2 class="titulo-con-imagen">
-                    <img src="impostor.png" alt="Impostor" class="logo-impostor">
+                    <img src="impostor.png" alt="Logo de Impostor" class="logo-impostor" loading="lazy">
                     IMPOSTOR
                 </h2>
                 
@@ -41,7 +48,7 @@
     <div id="modal-cargando" class="modal-overlay modal-cargando" style="display: none;">
         <div class="modal-content modal-cargando-content">
             <div class="spinner"></div>
-            <h3>Cargando nuevo juego...</h3>
+            <h3 id="modal-cargando-title">Cargando nuevo juego...</h3>
             <p>Por favor espera mientras se genera el juego</p>
         </div>
     </div>
@@ -51,10 +58,14 @@
         <div class="modal-content modal-elementos-content">
             <h3 id="titulo-categoria-modal"></h3>
             <div id="lista-elementos-categoria" class="lista-elementos-categoria"></div>
-            <button class="btn-confirmar" onclick="cerrarModalElementos()">Cerrar</button>
+            <button class="btn-confirmar" id="btn-cerrar-elementos">Cerrar</button>
         </div>
     </div>
 
+    <!-- Prefetch para mejorar performance de navegación -->
+    <link rel="prefetch" href="index.html">
+    <link rel="prefetch" href="sesion.html">
+    
     <script src="script.js"></script>
     <!-- Supabase SDK for database integration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -62,19 +73,29 @@
     <script>
         // Inicializar página de selección de categoría
         async function initSeleccionarCategoria() {
-            const sessionNumber = localStorage.getItem('sessionNumber');
+            // Usar SessionCache para mejor performance (optimización)
+            const sessionNumber = SessionCache.getSessionNumber();
             
             // Si no hay datos de sesión, redirigir al inicio
             if (!sessionNumber) {
-                alert('No se encontró información de sesión. Redirigiendo al inicio...');
+                // Usar notificación si está disponible, sino alert
+                if (typeof NotificationUtils !== 'undefined') {
+                    NotificationUtils.error('No se encontró información de sesión. Redirigiendo al inicio...');
+                } else {
+                    alert('No se encontró información de sesión. Redirigiendo al inicio...');
+                }
                 window.location.href = 'index.html';
                 return;
             }
             
-            // Verificar que el usuario es admin
-            const sessionType = localStorage.getItem('sessionType');
+            // Verificar que el usuario es admin (usando SessionCache)
+            const sessionType = SessionCache.getSessionType();
             if (sessionType !== 'admin') {
-                alert('Solo el admin puede iniciar el juego. Redirigiendo...');
+                if (typeof NotificationUtils !== 'undefined') {
+                    NotificationUtils.warning('Solo el admin puede iniciar el juego. Redirigiendo...');
+                } else {
+                    alert('Solo el admin puede iniciar el juego. Redirigiendo...');
+                }
                 window.location.href = 'sesion.html';
                 return;
             }
@@ -82,11 +103,12 @@
             // Actualizar número de sesión
             const numeroSesionHeader = document.getElementById('numero-sesion-header');
             if (numeroSesionHeader) {
-                numeroSesionHeader.textContent = sessionNumber;
+                const codigoCorto = obtenerCodigoCorto(sessionNumber);
+                numeroSesionHeader.textContent = codigoCorto;
             }
             
-            // Actualizar nombre de usuario
-            const userName = localStorage.getItem('userName');
+            // Actualizar nombre de usuario (usando SessionCache)
+            const userName = SessionCache.getUserName();
             if (userName) {
                 const userNameHeader = document.getElementById('user-name-header');
                 const nombreUsuarioHeader = document.getElementById('nombre-usuario-header');
@@ -110,19 +132,33 @@
         // Mostrar selector de categorías
         function mostrarSelectorCategorias() {
             if (!categoriasData) {
-                alert('Error: No se pudieron cargar las categorías');
+                if (typeof NotificationUtils !== 'undefined') {
+                    NotificationUtils.error('Error: No se pudieron cargar las categorías');
+                } else {
+                    alert('Error: No se pudieron cargar las categorías');
+                }
                 return;
             }
             
+            // Obtener lista de categorías
             const listaCategorias = document.getElementById('lista-categorias');
             if (!listaCategorias) return;
             
-            listaCategorias.innerHTML = '';
+            // Limpiar lista de forma segura (optimización: usar removeChild en lugar de innerHTML)
+            while (listaCategorias.firstChild) {
+                listaCategorias.removeChild(listaCategorias.firstChild);
+            }
+            
+            // Cachear modal de carga para evitar múltiples queries (optimización)
+            const modalCargando = document.getElementById('modal-cargando');
+            
+            // Usar DocumentFragment para mejor performance (optimización)
+            const fragment = document.createDocumentFragment();
             
             Object.keys(categoriasData).forEach(categoria => {
                 const botonCategoria = document.createElement('button');
                 botonCategoria.className = 'btn-categoria';
-                const cantidadElementos = categoriasData[categoria] ? categoriasData[categoria].length : 0;
+                const cantidadElementos = categoriasData[categoria]?.length || 0;
                 botonCategoria.textContent = `${categoria} (${cantidadElementos})`;
                 
                 // Event listener para click normal
@@ -133,7 +169,6 @@
                         botonCategoria.classList.add('selected');
                         
                         // Mostrar popup de carga inmediatamente
-                        const modalCargando = document.getElementById('modal-cargando');
                         if (modalCargando) {
                             modalCargando.style.display = 'flex';
                         }
@@ -168,8 +203,12 @@
                     cancelarTimerPresionado();
                 }, { passive: true });
                 
-                listaCategorias.appendChild(botonCategoria);
+                // Agregar al fragment en lugar de directamente al DOM (optimización)
+                fragment.appendChild(botonCategoria);
             });
+            
+            // Agregar todos los botones de una vez (más eficiente)
+            listaCategorias.appendChild(fragment);
         }
         
         // Iniciar timer cuando se presiona el botón
@@ -178,7 +217,7 @@
             pressTimer = setTimeout(function() {
                 mostrarElementosCategoria(categoria);
                 isPressing = false;
-            }, 2000); // 2 segundos
+            }, CONFIG.TIEMPO_MOSTRAR_CONTENIDO); // Usar constante de CONFIG
         }
         
         // Cancelar timer cuando se suelta el botón
@@ -198,6 +237,7 @@
                 return;
             }
             
+            // Obtener elementos del modal
             const modal = document.getElementById('modal-elementos-categoria');
             const titulo = document.getElementById('titulo-categoria-modal');
             const lista = document.getElementById('lista-elementos-categoria');
@@ -205,20 +245,29 @@
             if (!modal || !titulo || !lista) return;
             
             titulo.textContent = categoria;
-            lista.innerHTML = '';
+            
+            // Usar DocumentFragment para mejor performance (optimización)
+            const fragment = document.createDocumentFragment();
             
             elementos.forEach((elemento, index) => {
                 const item = document.createElement('div');
                 item.className = 'elemento-item';
                 item.textContent = `${index + 1}. ${elemento}`;
-                lista.appendChild(item);
+                fragment.appendChild(item);
             });
+            
+            // Limpiar lista de forma segura (optimización: usar removeChild en lugar de innerHTML)
+            while (lista.firstChild) {
+                lista.removeChild(lista.firstChild);
+            }
+            lista.appendChild(fragment);
             
             modal.style.display = 'flex';
         }
         
         // Cerrar modal de elementos (función global)
         window.cerrarModalElementos = function() {
+            // Obtener modal
             const modal = document.getElementById('modal-elementos-categoria');
             if (modal) {
                 modal.style.display = 'none';
@@ -231,25 +280,18 @@
             }
         };
         
-        // Cerrar modal al hacer click fuera
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('modal-elementos-categoria');
-            if (modal) {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        window.cerrarModalElementos();
-                    }
-                });
-            }
-        });
-        
         // Iniciar juego con una categoría seleccionada
         async function iniciarJuegoConCategoria(categoria) {
-            const sessionNumber = localStorage.getItem('sessionNumber');
-            const userName = localStorage.getItem('userName');
+            // Usar SessionCache para mejor performance (optimización)
+            const sessionNumber = SessionCache.getSessionNumber();
+            const userName = SessionCache.getUserName();
             
             if (!sessionNumber || !userName) {
-                alert('Error: No se encontró información de sesión o usuario');
+                if (typeof NotificationUtils !== 'undefined') {
+                    NotificationUtils.error('Error: No se encontró información de sesión o usuario');
+                } else {
+                    alert('Error: No se encontró información de sesión o usuario');
+                }
                 return;
             }
             
@@ -257,12 +299,14 @@
             const usuarios = await obtenerUsuariosSesion(sessionNumber);
             
             // Filtrar usuarios válidos
-            const usuariosValidos = usuarios.filter(usuario => 
-                usuario && usuario.usuario && usuario.usuario.trim() !== ''
-            );
+            const usuariosValidos = filtrarUsuariosValidos(usuarios);
             
             if (usuariosValidos.length < 3) {
-                alert('Se necesitan al menos 3 usuarios para jugar');
+                if (typeof NotificationUtils !== 'undefined') {
+                    NotificationUtils.warning('Se necesitan al menos 3 usuarios para jugar');
+                } else {
+                    alert('Se necesitan al menos 3 usuarios para jugar');
+                }
                 return;
             }
             
@@ -285,33 +329,53 @@
             };
             
             // Guardar estado del juego en Supabase
-            console.log('💾 Guardando juego en Supabase...');
-            console.log('📋 Estado del juego a guardar:', estadoJuego);
+            debugLog('💾 Guardando juego en Supabase...');
+            debugLog('📋 Estado del juego a guardar:', estadoJuego);
             
             await guardarEstadoJuego(sessionNumber, estadoJuego);
-            console.log('✅ Juego guardado, esperando confirmación...');
             
-            // Esperar un momento para asegurar que Supabase procese el cambio
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            debugLog('✅ Juego guardado, esperando confirmación...');
             
-            // Verificar que se guardó correctamente antes de redirigir
-            console.log('🔍 Verificando que el juego se guardó correctamente...');
+            // Esperar un momento para asegurar que Supabase procese el cambio (usar CONFIG)
+            await new Promise(resolve => setTimeout(resolve, CONFIG.DELAY_REINTENTO_JUEGO));
             
             // Redirigir de vuelta a la sesión
-            console.log('➡️ Redirigiendo a sesion.html...');
             window.location.href = 'sesion.html';
+        }
+        
+        // Configurar botón cerrar modal de elementos
+        function configurarModalElementos() {
+            const btnCerrar = document.getElementById('btn-cerrar-elementos');
+            const modal = document.getElementById('modal-elementos-categoria');
+            
+            if (btnCerrar) {
+                btnCerrar.addEventListener('click', window.cerrarModalElementos);
+            }
+            
+            // Cerrar modal al hacer click fuera
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        window.cerrarModalElementos();
+                    }
+                });
+            }
         }
         
         // Inicializar cuando se carga la página
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initSeleccionarCategoria);
+            document.addEventListener('DOMContentLoaded', function() {
+                initSeleccionarCategoria();
+                configurarModalElementos();
+            });
         } else {
             initSeleccionarCategoria();
+            configurarModalElementos();
         }
     </script>
     
     <footer>
-        <p>Impostor v1.1 desarrollado por Astutosoft © 2025</p>
+        <p id="footer-version">Impostor v<span id="version-number">1.2</span> desarrollado por Astutosoft © 2025</p>
     </footer>
 </body>
 </html>

@@ -1,6 +1,6 @@
 {
   "name": "web-prueba",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Una página web de prueba con HTML, CSS y JavaScript",
   "main": "index.html",
   "scripts": {

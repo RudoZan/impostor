@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sesión - Web de Prueba</title>
+    <meta name="description" content="Sesión de juego Impostor - Participa en el juego y descubre quién es el impostor.">
+    <meta name="keywords" content="impostor, juego, sesión, multiplayer">
+    <meta name="author" content="Astutosoft">
+    <meta name="theme-color" content="#ff6b6b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Impostor">
+    <title>Impostor - Sesión de Juego</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,7 +18,7 @@
         <section class="hero">
             <div class="welcome-container">
                 <h2 class="titulo-con-imagen">
-                    <img src="impostor.png" alt="Impostor" class="logo-impostor">
+                    <img src="impostor.png" alt="Logo de Impostor" class="logo-impostor" loading="lazy">
                     IMPOSTOR
                 </h2>
                 
@@ -54,7 +61,7 @@
                 <!-- Modal de confirmación - Nuevo Juego -->
                 <div id="modal-confirmacion" class="modal-overlay" style="display: none;">
                     <div class="modal-content">
-                        <h3>¿Reiniciar el juego?</h3>
+                        <h3 id="modal-confirmacion-title">¿Reiniciar el juego?</h3>
                         <p>Se generará un nuevo concepto/palabra y un nuevo impostor.</p>
                         <div class="modal-buttons">
                             <button id="btn-confirmar-nuevo-juego" class="btn-confirmar">Confirmar</button>
@@ -66,7 +73,7 @@
                 <!-- Modal de confirmación - Salir de sesión -->
                 <div id="modal-salir-sesion" class="modal-overlay" style="display: none;">
                     <div class="modal-content">
-                        <h3>¿Salir de la sesión?</h3>
+                        <h3 id="modal-salir-title">¿Salir de la sesión?</h3>
                         <p>Esto te sacará fuera del juego y de la sesión.</p>
                         <div class="modal-buttons">
                             <button id="btn-confirmar-salir" class="btn-confirmar">Confirmar</button>
@@ -78,7 +85,7 @@
                 <!-- Modal de confirmación - Revelar identidad -->
                 <div id="modal-revelar-identidad" class="modal-overlay" style="display: none;">
                     <div class="modal-content">
-                        <h3>¿Revelar tu identidad?</h3>
+                        <h3 id="modal-revelar-title">¿Revelar tu identidad?</h3>
                         <p>Todos los otros usuarios verán tu identidad.</p>
                         <div class="modal-buttons">
                             <button id="btn-confirmar-revelar" class="btn-confirmar">Confirmar</button>
@@ -91,9 +98,13 @@
     </main>
 
     <footer>
-        <p>Impostor v1.1 desarrollado por Astutosoft © 2025</p>
+        <p id="footer-version">Impostor v<span id="version-number">1.2</span> desarrollado por Astutosoft © 2025</p>
     </footer>
 
+    <!-- Prefetch para mejorar performance de navegación -->
+    <link rel="prefetch" href="index.html">
+    <link rel="prefetch" href="seleccionar-categoria.html">
+    
     <script src="script.js"></script>
     <!-- Supabase SDK for database integration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

@@ -1,3 +1,28 @@
+/* Variables CSS para mejor mantenibilidad */
+:root {
+    --color-primary: #ff6b6b;
+    --color-primary-light: #ff8e53;
+    --color-primary-dark: #c44569;
+    --color-secondary: #667eea;
+    --color-secondary-dark: #764ba2;
+    --color-success: #38a169;
+    --color-error: #e53e3e;
+    --color-warning: #d69e2e;
+    --color-info: #3182ce;
+    --color-text: #2d3748;
+    --color-text-light: #4a5568;
+    --color-text-muted: #718096;
+    --color-bg: #ffffff;
+    --color-bg-light: #f7fafc;
+    --color-border: #e2e8f0;
+    --border-radius: 12px;
+    --border-radius-lg: 20px;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.3);
+    --transition: all 0.3s ease;
+}
+
 /* Reset y configuración base */
 * {
     margin: 0;
@@ -8,9 +33,9 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
-    color: #2d3748;
+    color: var(--color-text);
     /* Opción 1: Naranja/Coral/Rosa - Cálido y energético */
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 25%, #ffa726 50%, #ff6b9d 75%, #c44569 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 25%, #ffa726 50%, #ff6b9d 75%, var(--color-primary-dark) 100%);
     /* Opción 2: Verde/Turquesa/Azul - Fresco y moderno */
     /* background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 25%, #00f260 50%, #0575e6 75%, #00c9ff 100%); */
     /* Opción 3: Rojo/Rosa/Magenta - Intenso y llamativo */
@@ -46,7 +71,7 @@ header {
     backdrop-filter: blur(10px);
     padding: 1.5rem 0;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border-bottom: 3px solid #ff6b6b;
+    border-bottom: 3px solid var(--color-primary);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -65,7 +90,7 @@ nav {
 .nav-left h1 {
     font-size: 1.6rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -96,16 +121,16 @@ nav {
 
 .session-number-header strong,
 .user-name-header strong {
-    color: #ff6b6b;
+    color: var(--color-primary);
     font-weight: 800;
 }
 
 .btn-back {
-    color: #ff6b6b;
+    color: var(--color-primary);
     text-decoration: none;
     padding: 0.6rem 1.2rem;
     border-radius: 12px;
-    border: 2px solid #ff6b6b;
+    border: 2px solid var(--color-primary);
     transition: all 0.3s ease;
     font-size: 0.9rem;
     font-weight: 600;
@@ -115,7 +140,7 @@ nav {
 }
 
 .btn-back:hover {
-    background: #ff6b6b;
+    background: var(--color-primary);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
@@ -163,7 +188,7 @@ main {
 .hero h2 {
     font-size: 2.5rem;
     margin-bottom: 0.25rem;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 50%, #ffa726 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 50%, #ffa726 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -228,7 +253,7 @@ main {
 }
 
 .btn-cambiar-icono:hover {
-    border-color: #ff6b6b;
+    border-color: var(--color-primary);
     background: #fff5f5;
     transform: scale(1.05);
 }
@@ -264,14 +289,14 @@ main {
 }
 
 .icono-option:hover {
-    border-color: #ff6b6b;
+    border-color: var(--color-primary);
     background: #fff5f5;
     transform: scale(1.1);
 }
 
 .icono-option.selected {
-    border-color: #ff6b6b;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    border-color: var(--color-primary);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
     transform: scale(1.15);
 }
@@ -330,7 +355,7 @@ main {
 
 .input-group input:focus {
     outline: none;
-    border-color: #ff6b6b;
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
     transform: translateY(-1px);
 }
@@ -361,7 +386,7 @@ main {
 
 /* Botones */
 .btn-primary {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     color: white;
     border: none;
     padding: 1rem 2rem;
@@ -406,8 +431,8 @@ main {
 
 .btn-secondary {
     background: white;
-    color: #ff6b6b;
-    border: 2px solid #ff6b6b;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
     padding: 1rem 2rem;
     font-size: 1rem;
     border-radius: 12px;
@@ -417,7 +442,7 @@ main {
 }
 
 .btn-secondary:hover {
-    background: #ff6b6b;
+    background: var(--color-primary);
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
@@ -460,7 +485,7 @@ main {
 }
 
 .content h3 {
-    color: #ff6b6b;
+    color: var(--color-primary);
     margin-bottom: 1rem;
     font-size: 1.3rem;
     font-weight: 800;
@@ -483,7 +508,7 @@ main {
 }
 
 .feature h4 {
-    color: #ff6b6b;
+    color: var(--color-primary);
     margin-bottom: 1rem;
     font-size: 1.3rem;
     font-weight: 700;
@@ -515,7 +540,7 @@ main {
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #ff6b6b;
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
@@ -583,7 +608,7 @@ footer p {
 
 .session-item strong,
 .user-item strong {
-    color: #ff6b6b;
+    color: var(--color-primary);
     font-weight: 800;
     font-size: 1.2rem;
 }
@@ -673,7 +698,7 @@ footer p {
 }
 
 .badge-admin {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     color: white;
     padding: 0.15rem 0.4rem;
     border-radius: 6px;
@@ -742,7 +767,7 @@ footer p {
 }
 
 .mensaje-esperando .numero-sesion-esperando strong {
-    color: #ff6b6b;
+    color: var(--color-primary);
     font-weight: 700;
     font-size: 1.1rem;
 }
@@ -918,7 +943,7 @@ footer p {
 }
 
 .btn-confirmar {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     color: white;
     border: none;
     padding: 0.6rem 1.2rem;
@@ -1033,7 +1058,7 @@ footer p {
 .btn-categoria:active,
 .btn-categoria.selected {
     transform: translateY(2px) scale(0.95);
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     color: #fff;
     box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.4), 
                 0 0 20px rgba(255, 107, 107, 0.6),
@@ -1264,7 +1289,7 @@ footer p {
 }
 
 .sesion-info h2 {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1295,7 +1320,7 @@ footer p {
 .sesion-id {
     font-size: 3rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1323,13 +1348,13 @@ footer p {
     background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
     padding: 1rem;
     border-radius: 16px;
-    border: 2px solid #ff6b6b;
+    border: 2px solid var(--color-primary);
     text-align: center;
     box-shadow: 0 10px 30px rgba(255, 107, 107, 0.15);
 }
 
 .success-message h3 {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1367,7 +1392,7 @@ footer p {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #ff6b6b;
+    background: var(--color-primary);
     animation: pulse 2s infinite;
     box-shadow: 0 0 12px rgba(255, 107, 107, 0.5);
 }
@@ -1394,7 +1419,7 @@ footer p {
 }
 
 #status-text {
-    color: #ff6b6b;
+    color: var(--color-primary);
     font-weight: 600;
 }
 

@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web de Prueba - Gestión de Sesiones</title>
+    <meta name="description" content="Impostor - Juego de deducción social. Crea o únete a una sesión y descubre quién es el impostor.">
+    <meta name="keywords" content="impostor, juego, deducción, social, multiplayer">
+    <meta name="author" content="Astutosoft">
+    <meta name="theme-color" content="#ff6b6b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Impostor">
+    <title>Impostor - Inicio | Crea o únete a una sesión</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,7 +18,7 @@
         <section class="hero">
             <div class="welcome-container">
                 <h2 class="titulo-con-imagen">
-                    <img src="impostor.png" alt="Impostor" class="logo-impostor">
+                    <img src="impostor.png" alt="Logo de Impostor" class="logo-impostor" loading="lazy">
                     IMPOSTOR
                 </h2>
                 
@@ -34,7 +41,7 @@
                 <!-- Modal de Selección de Ícono -->
                 <div id="modal-icono" class="modal-overlay" style="display: none;">
                     <div class="modal-content modal-icono">
-                        <h3>Elige tu ícono</h3>
+                        <h3 id="modal-icono-title">Elige tu ícono</h3>
                         <div class="iconos-grid" id="iconos-grid">
                             <!-- Personas -->
                             <button type="button" class="icono-option" data-icono="👤">👤</button>
@@ -192,7 +199,8 @@
                                 min="1000"
                                 max="9999"
                                 maxlength="4"
-                                maxlength="4"
+                                pattern="[0-9]{4}"
+                                inputmode="numeric"
                             >
                         </div>
                     </div>
@@ -205,7 +213,7 @@
                 <!-- Modal de Instrucciones -->
                 <div id="modal-instrucciones" class="modal-overlay" style="display: none;">
                     <div class="modal-content modal-instrucciones">
-                        <h3>📖 Cómo Jugar a Impostor</h3>
+                        <h3 id="modal-instrucciones-title">📖 Cómo Jugar a Impostor</h3>
                         <div class="instrucciones-contenido">
                             <h4>🎯 Objetivo del Juego</h4>
                             <p>Descubrir quién es el impostor mientras el impostor intenta pasar desapercibido.</p>
@@ -235,9 +243,13 @@
     </main>
 
     <footer>
-        <p>Impostor v1.1 desarrollado por Astutosoft © 2025</p>
+        <p id="footer-version">Impostor v<span id="version-number">1.2</span> desarrollado por Astutosoft © 2025</p>
     </footer>
 
+    <!-- Prefetch para mejorar performance de navegación -->
+    <link rel="prefetch" href="sesion.html">
+    <link rel="prefetch" href="seleccionar-categoria.html">
+    
     <script src="script.js"></script>
     <!-- Supabase SDK for database integration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
